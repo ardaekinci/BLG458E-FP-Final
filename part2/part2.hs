@@ -73,6 +73,25 @@ sumCards cards = sumCards' cards 0  -- Call Recursive function with initial valu
                 nextAcc = acc + (cardValue c) -- Calculate the value of first element in the list.
 
 
+-- | Score function calculates the score from held-cards and goal.
+score :: [Card]    -- Input1: Held-Cards
+      -> Int        -- Input2: Goal
+      -> Int        -- Output: Score
+score heldCards goal
+    | sameColor = floor (fromIntegral preliminaryScore / 2) -- If all the colors are same in the held-cards. Divide score by 2
+    | otherwise = preliminaryScore             -- If colors are not asem return the calculated score.
+    where 
+        sumOfValues = sumCards heldCards
+        sameColor = allSameColor heldCards
+        preliminaryScore = calculatePreliminaryScore sumOfValues goal
+        -- calculate preliminary score 
+        calculatePreliminaryScore :: Int    -- Input1: Sum of values
+                                  -> Int    -- Input2: Goal
+                                  -> Int    -- Output: Preliminary score
+        calculatePreliminaryScore sum goal  -- Calculate preliminary score according to rules.
+            | sum > goal    = 3 * (sum - goal)
+            | otherwise     = goal - sum
+
 {-
 a = Card{suit= Clubs, rank = Num 5}
 b = Card{suit= Spades, rank = Num 5}
