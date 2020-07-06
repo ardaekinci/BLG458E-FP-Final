@@ -193,8 +193,23 @@ readCards = readCards' [] -- Call helper method recursively to store read cards.
             userInput <- getLine   -- Get input from user
             case userInput of
                 "." -> return readCards  -- If user enters a single dot return the read cards 
+                -- Used pattern matching if given string consist of 2 chars this pattern will work.
                 [suitCode, rankCode] -> readCards' (readCards ++ [convertCard suitCode rankCode]) -- If user enters valid input, convert input to card and add to list
                 _                    -> error "Invalid input supplied." 
+
+
+-- | Takes Move name, Suit and Rank code returns Move.
+convertMove :: Char -- Input1: Move name
+            -> Char -- Input2: Suit code
+            -> Char -- Input3: Rank code
+            -> Move -- Output: Created Move from name and codes
+-- Use pattern matching, if move name is 'd' or 'D' ignore other params
+convertMove 'd' _ _                 = Draw
+convertMove 'D' _ _                 = Draw
+-- Use pattern matching, if move name is 'r' or 'R' get card with suit and rank code, and create move.
+convertMove 'r' suitCode rankCode   = Discard (convertCard suitCode rankCode)
+convertMove 'R' suitCode rankCode   = Discard (convertCard suitCode rankCode) 
+
 
 
 
