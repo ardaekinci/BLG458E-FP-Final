@@ -4,9 +4,9 @@ import Data.Char (isDigit, digitToInt) -- Used for Rank Conversion
 
 -- Define data types
 data Color = Red | Black deriving(Show, Eq) -- Derive Show to display card color
-data Suit = Clubs | Diamonds | Hearts | Spades deriving(Eq) -- Derive Eq to check card color
-data Rank = Num Int | Jack | Queen | King | Ace deriving(Eq) -- Derive Eq to check rank of card
-data Card = Card { suit :: Suit, rank :: Rank } deriving(Eq) -- Derive Eq to compare two cards
+data Suit = Clubs | Diamonds | Hearts | Spades deriving(Eq, Show) -- Derive Eq to check card color
+data Rank = Num Int | Jack | Queen | King | Ace deriving(Eq, Show) -- Derive Eq to check rank of card
+data Card = Card { suit :: Suit, rank :: Rank } deriving(Eq, Show) -- Derive Eq to compare two cards
 data Move = Draw | Discard Card deriving(Eq) -- Derive Eq to check next move of user
 
 
@@ -46,9 +46,6 @@ removeCard  :: [Card]   -- Input1: Card list to update
             -> Card     -- Input2: Card that wanted to remove from list
             -> [Card]   -- Output: Updated card list.
 removeCard [] _     = error "card not in list"       -- If there are no cards in the list, return error.
-removeCard [card] c                                  -- If there are only one card in the list, compare it with discarded card throw error if they are not same.
-    | card == c = []    -- If cards are same return empty list.
-    | otherwise = error "card not in list"  -- If cards are not same thrown an error.
 removeCard (card:cs) c                               -- Split the given list by first element and rest of them.
     -- If card is not exist in the list throw error.
     | not isCardExist   = error "card not in list"
@@ -58,7 +55,7 @@ removeCard (card:cs) c                               -- Split the given list by 
     | otherwise         = card : removeCard cs c
     where 
         -- Check existence of card in the list.
-        isCardExist = elem c cs
+        isCardExist = elem c (c:cs)
 
 
 -- | This function returns true if colors of cards in the list are same otherwise returns false.
@@ -237,7 +234,7 @@ readMoves = readMoves' [] -- Call helper method recursively to store read moves.
 main = do 
     putStrLn "Enter cards:"
     cards <- readCards
-    -- putStrLn (show cards)
+    putStrLn (show cards)
     putStrLn "Enter moves:"
     moves <- readMoves
     -- putStrLn (show moves)
