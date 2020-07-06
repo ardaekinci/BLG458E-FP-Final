@@ -1,5 +1,5 @@
 -- Define data types
-data Color = Red | Black deriving(Show) -- Derive Show to display card color
+data Color = Red | Black deriving(Show, Eq) -- Derive Show to display card color
 data Suit = Clubs | Diamonds | Hearts | Spades deriving(Eq) -- Derive Eq to check card color
 data Rank = Num Int | Jack | Queen | King | Ace deriving(Eq) -- Derive Eq to check rank of card
 data Card = Card { suit :: Suit, rank :: Rank } deriving(Eq) -- Derive Eq to compare two cards
@@ -41,3 +41,24 @@ removeCard (card:cs) c  -- Split the given list by first element and rest of the
     where 
         -- Check existence of card in the list.
         isCardExist = elem c cs
+
+
+-- | This function returns true if colors of cards in the list are same otherwise returns false.
+allSameColor :: [Card]  -- Input1: Card List
+             -> Bool    -- Output: True if colors are same otherwise False
+allSameColor []     = error "Card list is empty" -- Throw error if card list empty.
+allSameColor [_]    = True                       -- Return true if there is only one card in the list.
+allSameColor cards  = null filteredCards         -- If filteredCards is empty return true, otherwise false.
+    where
+        firstColor = cardColor (cards!!0)   -- Get color of first card in the list.
+        -- Get cards that has different color from the first card in the list. It must be empty for same color.
+        filteredCards = filter (\x -> cardColor x /= firstColor) cards
+
+
+
+{-
+a = Card{suit= Clubs, rank = Num 5}
+b = Card{suit= Spades, rank = Num 5}
+c = Card{suit= Clubs, rank = Ace}
+d = Card{suit= Diamonds, rank = Ace}
+-}
