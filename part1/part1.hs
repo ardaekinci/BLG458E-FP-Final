@@ -68,3 +68,67 @@ sundays1tr start end = sundaystr' 0 start 1   -- Initialize first call with star
                 nextY = if m == 12 then y + 1 else y -- If current month is the last month of the year increment year.
                 nextM = if m == 12 then 1 else m + 1 -- If current month is the last month set month as 1 to start for new year.
                 nextAcc = if dayOfWeek y m 1 == 1 then acc + 1 else acc -- Calculate next accumulator value.
+
+
+-- To check what is leap year --> https://en.wikipedia.org/wiki/Leap_year
+-- | This function checks the year is leap year or not.
+leap :: Integer -- Input1: Year
+     -> Bool    -- Output: Boolean, if year is leap year it returns true otherwise false 
+leap year
+    | year `mod` 400 == 0 = True -- If year is divisible by 400 return true
+    | year `mod` 4 == 0 && year `mod` 100 /= 0 = True -- If year is divisible by 4 but not divisible by 100 return true
+    | otherwise = False 
+
+
+monthsThirtyDays = [4, 6, 9, 11] -- Month indexes that has 30 days.
+-- | This function calculates the number of days for given month. 
+daysInMonth :: Integer  -- Input1: Month
+            -> Integer  -- Input2: Year
+            -> Integer  -- Output: Number of days in given (Year, Month)
+daysInMonth month year 
+    | month == 2 = if leap year then 29 else 28 -- If the given Month is February check the year is leap year and return 29, otherwise 28.
+    | elem month monthsThirtyDays = 30          -- If monthsThirtyDays inclues the given month return 30.
+    | otherwise = 31                            -- Return 31 for remaining months.
+
+
+{-
+    Unlike sunday1 function, this function first calculates the number of days in the month.
+    Since every 7 days the same day occurs, it divides the month week by week and calculates the remaining days in the month.
+    Instead of calculating the day of week for every time, this function keep track of the day of week.
+-}
+-- | This function calculates the number of months that starts with sunday between two years.
+sundays2    :: Integer  -- Input1: Start year
+            -> Integer  -- Input2: End year
+            -> Integer  -- Output: Total number of months that starts with sunday between start and end.
+sundays2 start end = sundays2' start 1 (dayOfWeek start 1 1) -- Initialize first call with start year, first month and day of week
+    where
+        -- | Recursive function to calculate result.
+        sundays2' :: Integer -- Input1: Start year
+                  -> Integer -- Input2: Start month
+                  -> Integer -- Input3: Initial day of week
+                  -> Integer -- Output: Number of month that start with sunday 
+        sundays2' y m dow
+            | y > end = 0   -- If the current year is higher than end year, return 0.
+            | otherwise = if dow `mod` 7 == 1 then rest + 1 else rest -- If the month start with sunday increment result.
+            where
+                nextY = if m == 12 then y + 1 else y -- If current month is the last month of the year increment year.
+                nextM = if m == 12 then 1 else m + 1 -- If current month is the last month set month as 1 to start for new year.
+                days = daysInMonth m y               -- Days in the current month
+                nextDow = dow + (days `mod` 7)       -- Calculate next day of week
+                rest = sundays2' nextY nextM nextDow -- Call recursively to calculate result for next date.
+
+
+-- | Get function by name and pass the params
+getFunction :: String -> (Integer -> Integer -> Integer)
+getFunction name
+    | name == "sundays1" = sundays1
+    | name == "sundays1tr" = sundays1tr
+    | name == "sundays2" = sundays2
+    | otherwise = error "unknown function"
+
+-- | Calculate and display the result by function name
+main :: IO ()
+main = do
+    line <- getLine
+    let [f, start, end] = words line
+    putStrLn $ show $ (getFunction f) (read start :: Integer) (read end :: Integer)
