@@ -3,7 +3,17 @@ data Color = Red | Black deriving(Show, Eq) -- Derive Show to display card color
 data Suit = Clubs | Diamonds | Hearts | Spades deriving(Eq) -- Derive Eq to check card color
 data Rank = Num Int | Jack | Queen | King | Ace deriving(Eq) -- Derive Eq to check rank of card
 data Card = Card { suit :: Suit, rank :: Rank } deriving(Eq) -- Derive Eq to compare two cards
-data Move = Draw | Discard Card
+data Move = Draw | Discard Card deriving(Eq) -- Derive Eq to check next move of user
+
+
+-- This data type represents the game state.
+data GameState = GameState{
+    cards :: [Card],        -- Card list
+    heldCards :: [Card],    -- Held cards
+    currentScore :: Int,    -- Current score
+    moves :: [Move]         -- Move list
+}
+
 
 -- | It returns the color of given card.
 cardColor :: Card   -- Input1: Card
@@ -74,23 +84,72 @@ sumCards cards = sumCards' cards 0  -- Call Recursive function with initial valu
 
 
 -- | Score function calculates the score from held-cards and goal.
-score :: [Card]    -- Input1: Held-Cards
+score :: [Card]     -- Input1: Held-Cards
       -> Int        -- Input2: Goal
       -> Int        -- Output: Score
 score heldCards goal
     | sameColor = floor (fromIntegral preliminaryScore / 2) -- If all the colors are same in the held-cards. Divide score by 2
     | otherwise = preliminaryScore             -- If colors are not asem return the calculated score.
     where 
-        sumOfValues = sumCards heldCards
-        sameColor = allSameColor heldCards
-        preliminaryScore = calculatePreliminaryScore sumOfValues goal
-        -- calculate preliminary score 
+        sumOfValues = sumCards heldCards        -- Calculate sum of values for held cards
+        sameColor = allSameColor heldCards      -- Check colors of held cards
+        preliminaryScore = calculatePreliminaryScore sumOfValues goal -- calculate preliminary score 
         calculatePreliminaryScore :: Int    -- Input1: Sum of values
                                   -> Int    -- Input2: Goal
                                   -> Int    -- Output: Preliminary score
         calculatePreliminaryScore sum goal  -- Calculate preliminary score according to rules.
             | sum > goal    = 3 * (sum - goal)
             | otherwise     = goal - sum
+
+
+-- | This function return next move and the remaining moves.
+getNextMove :: [Move]           -- Input1: Current Move list
+            -> (Move, [Move])   -- Output: (Next move, Remaining moves)
+getNextMove (nextMove:moves) = (nextMove, moves)
+
+
+-- | Takes cards, held-cards and move, returns the next cards according the seleceted move.
+calculateNextCards  :: ([Card], [Card])   -- Input1: (Current cards in the list, current held cards)
+                    -> Move               -- Input2: Next move
+                    -> ([Card], [Card])   -- Output: (Next cards in the list, next held cards)
+calculateNextCards (cards, heldCards) nextMove
+    -- If the next move is discard card, do not change cards and remove discarted card from the held cards.
+    | nextMove /= Draw  = (cards, removeCard heldCards discartedCard)
+    -- If the next move is draw card, remove first card from cards and put it into held cards 
+    -- drop n xs = Returns the list after dropping first n items
+    -- n:xs      = Returns the list after adding n as first element
+    | otherwise         = (drop 1 cards, cards!!0 : heldCards)
+    where
+        Discard discartedCard = nextMove
+
+
+-- | Run the game according to given moves and cards and calculate score.
+runGame :: [Card]       -- Input1: Initial card list
+        -> [Move]       -- Input2: Move list
+        -> Int          -- Input3: Goal
+        -> Int          -- Output: Score
+runGame cardList moveList goal = runGame' GameState{cards = cardList, heldCards = [], currentScore = 0, moves = moveList}
+    where
+        runGame' :: GameState -- Input1: Current game state
+                 -> Int       -- Output: Score
+        runGame' currentState
+            | null (moves currentState) = currentScore currentState -- If there are no moves finish the game
+            -- If user discard a card make recursive call with updated cards
+            | nextMove /= Draw = nextState
+            | null (cards currentState) = currentScore currentState -- If there are no cards for draw finish the game
+            | nextScore > goal = currentScore currentState -- If score after the drawing exceed the goal finish the game
+            | otherwise = nextState
+            where
+                -- Calculate next move and remaining moves
+                (nextMove, remainingMoves) = getNextMove (moves currentState)
+                -- Calculate next cards in the card list and held cards according to move
+                (nextCards, nextHeldCards) = calculateNextCards (cards currentState, heldCards currentState) nextMove
+                -- Calculate next score for held cards
+                nextScore = score nextHeldCards goal
+                -- Calculate next state of the game
+                nextState = runGame' GameState{cards = nextCards, heldCards = nextHeldCards, currentScore = nextScore, moves = remainingMoves}
+
+
 
 {-
 a = Card{suit= Clubs, rank = Num 5}
