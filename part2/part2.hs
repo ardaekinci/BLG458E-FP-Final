@@ -1,3 +1,5 @@
+-- Github Link Of Project: https://github.com/ardaekinci/BLG458E-FP-Final
+
 import Data.Char (isDigit, digitToInt) -- Used for Rank Conversion
 
 -- Define data types
