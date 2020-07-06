@@ -1,0 +1,189 @@
+- init:
+    run: rm -f part1 part1.o part1.hi
+    visible: false
+- compile:
+    run: ghc part1.hs -o part1
+    blocker: true
+- case_1:
+    run: ./part1
+    script:
+      - send: "sundays1 132 1285"
+      - expect: "1985"
+      - expect: _EOF_
+- case_2:
+    run: ./part1
+    script:
+      - send: "sundays1tr 132 1285"
+      - expect: "1985"
+      - expect: _EOF_
+- case_3:
+    run: ./part1
+    script:
+      - send: "sundays2 132 1285"
+      - expect: "1985"
+      - expect: _EOF_
+- case_4:
+    run: ./part1
+    script:
+      - send: "sundays1 938 1061"
+      - expect: "214"
+      - expect: _EOF_
+- case_5:
+    run: ./part1
+    script:
+      - send: "sundays1tr 938 1061"
+      - expect: "214"
+      - expect: _EOF_
+- case_6:
+    run: ./part1
+    script:
+      - send: "sundays2 938 1061"
+      - expect: "214"
+      - expect: _EOF_
+- case_7:
+    run: ./part1
+    script:
+      - send: "sundays1 358 1959"
+      - expect: "2756"
+      - expect: _EOF_
+- case_8:
+    run: ./part1
+    script:
+      - send: "sundays1tr 358 1959"
+      - expect: "2756"
+      - expect: _EOF_
+- case_9:
+    run: ./part1
+    script:
+      - send: "sundays2 358 1959"
+      - expect: "2756"
+      - expect: _EOF_
+- case_10:
+    run: ./part1
+    script:
+      - send: "sundays1 278 1058"
+      - expect: "1343"
+      - expect: _EOF_
+- case_11:
+    run: ./part1
+    script:
+      - send: "sundays1tr 278 1058"
+      - expect: "1343"
+      - expect: _EOF_
+- case_12:
+    run: ./part1
+    script:
+      - send: "sundays2 278 1058"
+      - expect: "1343"
+      - expect: _EOF_
+- case_13:
+    run: ./part1
+    script:
+      - send: "sundays1 763 1361"
+      - expect: "1029"
+      - expect: _EOF_
+- case_14:
+    run: ./part1
+    script:
+      - send: "sundays1tr 763 1361"
+      - expect: "1029"
+      - expect: _EOF_
+- case_15:
+    run: ./part1
+    script:
+      - send: "sundays2 763 1361"
+      - expect: "1029"
+      - expect: _EOF_
+- case_16:
+    run: ./part1
+    script:
+      - send: "sundays1 762 1992"
+      - expect: "2118"
+      - expect: _EOF_
+- case_17:
+    run: ./part1
+    script:
+      - send: "sundays1tr 762 1992"
+      - expect: "2118"
+      - expect: _EOF_
+- case_18:
+    run: ./part1
+    script:
+      - send: "sundays2 762 1992"
+      - expect: "2118"
+      - expect: _EOF_
+- case_19:
+    run: ./part1
+    script:
+      - send: "sundays1 838 1884"
+      - expect: "1800"
+      - expect: _EOF_
+- case_20:
+    run: ./part1
+    script:
+      - send: "sundays1tr 838 1884"
+      - expect: "1800"
+      - expect: _EOF_
+- case_21:
+    run: ./part1
+    script:
+      - send: "sundays2 838 1884"
+      - expect: "1800"
+      - expect: _EOF_
+- case_22:
+    run: ./part1
+    script:
+      - send: "sundays1 918 1722"
+      - expect: "1385"
+      - expect: _EOF_
+- case_23:
+    run: ./part1
+    script:
+      - send: "sundays1tr 918 1722"
+      - expect: "1385"
+      - expect: _EOF_
+- case_24:
+    run: ./part1
+    script:
+      - send: "sundays2 918 1722"
+      - expect: "1385"
+      - expect: _EOF_
+- case_25:
+    run: ./part1
+    script:
+      - send: "sundays1 305 1617"
+      - expect: "2258"
+      - expect: _EOF_
+- case_26:
+    run: ./part1
+    script:
+      - send: "sundays1tr 305 1617"
+      - expect: "2258"
+      - expect: _EOF_
+- case_27:
+    run: ./part1
+    script:
+      - send: "sundays2 305 1617"
+      - expect: "2258"
+      - expect: _EOF_
+- case_28:
+    run: ./part1
+    script:
+      - send: "sundays1 758 1750"
+      - expect: "1708"
+      - expect: _EOF_
+- case_29:
+    run: ./part1
+    script:
+      - send: "sundays1tr 758 1750"
+      - expect: "1708"
+      - expect: _EOF_
+- case_30:
+    run: ./part1
+    script:
+      - send: "sundays2 758 1750"
+      - expect: "1708"
+      - expect: _EOF_
+- cleanup:
+    run: rm -f part1 part1.o part1.hi
+    visible: false
