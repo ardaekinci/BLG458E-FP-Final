@@ -45,7 +45,8 @@ cardValue card
 removeCard  :: [Card]   -- Input1: Card list to update
             -> Card     -- Input2: Card that wanted to remove from list
             -> [Card]   -- Output: Updated card list.
-removeCard (card:cs) c  -- Split the given list by first element and rest of them.
+removeCard [] _ = error "part2: card not in list"       -- If there are no cards in the list, return error.
+removeCard (card:cs) c                                  -- Split the given list by first element and rest of them.
     -- If card is not exist in the list throw error.
     | not isCardExist   = error "part2: card not in list"
     -- If remove card is the first element of list return rest of the list.
@@ -141,7 +142,7 @@ runGame cardList moveList goal = runGame' GameState{cards = cardList, heldCards 
             -- If user discard a card make recursive call with updated cards
             | nextMove /= Draw = nextState
             | null (cards currentState) = currentScore currentState -- If there are no cards for draw finish the game
-            | nextScore > goal = currentScore currentState -- If score after the drawing exceed the goal finish the game
+            | nextScore > goal = nextScore -- If score after the drawing exceed the goal finish the game
             | otherwise = nextState
             where
                 -- Calculate next move and remaining moves
