@@ -234,7 +234,7 @@ readMoves = readMoves' [] -- Call helper method recursively to store read moves.
 main = do 
     putStrLn "Enter cards:"
     cards <- readCards
-    putStrLn (show cards)
+    -- putStrLn (show cards)
     putStrLn "Enter moves:"
     moves <- readMoves
     -- putStrLn (show moves)
