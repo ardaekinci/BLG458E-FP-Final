@@ -182,6 +182,22 @@ convertCard :: Char -- Input1: Suit code
             -> Card -- Output: Created card from rank and suid code
 convertCard suitCode rankCode = Card{suit = convertSuit suitCode, rank = convertRank rankCode}
 
+
+-- | This function read cards from the user and return the card list.
+readCards :: IO [Card]
+readCards = readCards' [] -- Call helper method recursively to store read cards.
+    where
+        readCards' :: [Card]       -- Input1: Read cards from the beginning
+                   -> IO [Card]    -- Output: Card list
+        readCards' readCards = do
+            userInput <- getLine   -- Get input from user
+            case userInput of
+                "." -> return readCards  -- If user enters a single dot return the read cards 
+                [suitCode, rankCode] -> readCards' (readCards ++ [convertCard suitCode rankCode]) -- If user enters valid input, convert input to card and add to list
+                _                    -> error "Invalid input supplied." 
+
+
+
 {-
 a = Card{suit= Clubs, rank = Num 5}
 b = Card{suit= Spades, rank = Num 5}
