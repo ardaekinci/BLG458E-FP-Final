@@ -55,6 +55,23 @@ allSameColor cards  = null filteredCards         -- If filteredCards is empty re
         filteredCards = filter (\x -> cardColor x /= firstColor) cards
 
 
+-- | This function calculates the value of cards and return it.
+sumCards :: [Card]  -- Input1: Card list
+         -> Int     -- Output: Total values of cards for given list
+sumCards []     = 0                 -- Return 0 if card list is empty.
+sumCards [x]    = cardValue x       -- Return the value of card if there is only one card in the list.
+sumCards cards = sumCards' cards 0  -- Call Recursive function with initial value as 0.
+    where 
+        sumCards' :: [Card] -- Input1: Card list to calculate sum of values
+                  -> Int    -- Input2: Acc value (Result)
+                  -> Int    -- Output: Sum of values
+        sumCards' [] acc = acc -- Return the results if there is no elements in the list anymore.
+        -- Get first element of list and call function for rest of the list.
+        -- Call function with new acc value
+        sumCards' (c:cs) acc = sumCards' cs nextAcc
+            where
+                nextAcc = acc + (cardValue c) -- Calculate the value of first element in the list.
+
 
 {-
 a = Card{suit= Clubs, rank = Num 5}
