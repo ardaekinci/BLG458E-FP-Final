@@ -1,3 +1,5 @@
+import Data.Char (isDigit, digitToInt) -- Used for Rank Conversion
+
 -- Define data types
 data Color = Red | Black deriving(Show, Eq) -- Derive Show to display card color
 data Suit = Clubs | Diamonds | Hearts | Spades deriving(Eq) -- Derive Eq to check card color
@@ -150,6 +152,35 @@ runGame cardList moveList goal = runGame' GameState{cards = cardList, heldCards 
                 nextState = runGame' GameState{cards = nextCards, heldCards = nextHeldCards, currentScore = nextScore, moves = remainingMoves}
 
 
+-- | Converts given char to related Suit. Checks first letter of Suit.
+convertSuit :: Char -- Input1: Code of suit
+            -> Suit -- Output: Related suit 
+convertSuit c 
+    | c == 'd' || c == 'D' = Diamonds
+    | c == 'c' || c == 'C' = Clubs
+    | c == 'h' || c == 'H' = Hearts
+    | c == 's' || c == 'S' = Spades
+    | otherwise            = error "Given suit is unknown"
+
+
+-- | Converts given char to related Rank. Checks first letter for face cards, for "Ace" checks `1`, for `10` checks `t` or `T`.
+convertRank :: Char -- Input1: Code of Rank
+            -> Rank -- Output: Related Rank
+convertRank r
+    | r == '1'             = Ace
+    | r == 'j' || r == 'J' = Jack
+    | r == 'q' || r == 'Q' = Queen
+    | r == 'k' || r == 'K' = King
+    | r == 't' || r == 'T' = Num 10
+    | isDigit r            = Num (digitToInt r) -- If given code is digit convert it to int and return related Rank.
+    | otherwise            = error "Given rank is unknown"
+
+
+-- | Takes Suit and Rank code, returns card.
+convertCard :: Char -- Input1: Suit code
+            -> Char -- Input2: Rank code
+            -> Card -- Output: Created card from rank and suid code
+convertCard suitCode rankCode = Card{suit = convertSuit suitCode, rank = convertRank rankCode}
 
 {-
 a = Card{suit= Clubs, rank = Num 5}
