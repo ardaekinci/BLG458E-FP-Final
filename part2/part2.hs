@@ -45,10 +45,13 @@ cardValue card
 removeCard  :: [Card]   -- Input1: Card list to update
             -> Card     -- Input2: Card that wanted to remove from list
             -> [Card]   -- Output: Updated card list.
-removeCard [] _ = error "part2: card not in list"       -- If there are no cards in the list, return error.
-removeCard (card:cs) c                                  -- Split the given list by first element and rest of them.
+removeCard [] _     = error "card not in list"       -- If there are no cards in the list, return error.
+removeCard [card] c                                  -- If there are only one card in the list, compare it with discarded card throw error if they are not same.
+    | card == c = []    -- If cards are same return empty list.
+    | otherwise = error "card not in list"  -- If cards are not same thrown an error.
+removeCard (card:cs) c                               -- Split the given list by first element and rest of them.
     -- If card is not exist in the list throw error.
-    | not isCardExist   = error "part2: card not in list"
+    | not isCardExist   = error "card not in list"
     -- If remove card is the first element of list return rest of the list.
     | card == c         = cs
     -- Call recursively remove card function. Check rest of the list to remove the card. Concatenate the card and the recursive calls.
