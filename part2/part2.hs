@@ -45,7 +45,7 @@ removeCard  :: [Card]   -- Input1: Card list to update
             -> [Card]   -- Output: Updated card list.
 removeCard (card:cs) c  -- Split the given list by first element and rest of them.
     -- If card is not exist in the list throw error.
-    | not isCardExist   = error "Given card is not exist in the card list"
+    | not isCardExist   = error "part2: card not in list"
     -- If remove card is the first element of list return rest of the list.
     | card == c         = cs
     -- Call recursively remove card function. Check rest of the list to remove the card. Concatenate the card and the recursive calls.
@@ -58,9 +58,9 @@ removeCard (card:cs) c  -- Split the given list by first element and rest of the
 -- | This function returns true if colors of cards in the list are same otherwise returns false.
 allSameColor :: [Card]  -- Input1: Card List
              -> Bool    -- Output: True if colors are same otherwise False
-allSameColor []     = error "Card list is empty" -- Throw error if card list empty.
-allSameColor [_]    = True                       -- Return true if there is only one card in the list.
-allSameColor cards  = null filteredCards         -- If filteredCards is empty return true, otherwise false.
+allSameColor []     = error "part2: card list is empty" -- Throw error if card list empty.
+allSameColor [_]    = True                              -- Return true if there is only one card in the list.
+allSameColor cards  = null filteredCards                -- If filteredCards is empty return true, otherwise false.
     where
         firstColor = cardColor (cards!!0)   -- Get color of first card in the list.
         -- Get cards that has different color from the first card in the list. It must be empty for same color.
@@ -160,7 +160,7 @@ convertSuit c
     | c == 'c' || c == 'C' = Clubs
     | c == 'h' || c == 'H' = Hearts
     | c == 's' || c == 'S' = Spades
-    | otherwise            = error "Given suit is unknown"
+    | otherwise            = error "part2: given suit is unknown"
 
 
 -- | Converts given char to related Rank. Checks first letter for face cards, for "Ace" checks `1`, for `10` checks `t` or `T`.
@@ -173,7 +173,7 @@ convertRank r
     | r == 'k' || r == 'K' = King
     | r == 't' || r == 'T' = Num 10
     | isDigit r            = Num (digitToInt r) -- If given code is digit convert it to int and return related Rank.
-    | otherwise            = error "Given rank is unknown"
+    | otherwise            = error "part2: given rank is unknown"
 
 
 -- | Takes Suit and Rank code, returns card.
@@ -189,13 +189,13 @@ readCards = readCards' [] -- Call helper method recursively to store read cards.
     where
         readCards' :: [Card]       -- Input1: Read cards from the beginning
                    -> IO [Card]    -- Output: Card list
-        readCards' readCards = do
+        readCards' cs = do
             userInput <- getLine   -- Get input from user
             case userInput of
-                "." -> return readCards  -- If user enters a single dot return the read cards 
+                "." -> return cs  -- If user enters a single dot return the read cards 
                 -- Used pattern matching if given string consist of 2 chars this pattern will work.
-                [suitCode, rankCode] -> readCards' (readCards ++ [convertCard suitCode rankCode]) -- If user enters valid input, convert input to card and add to list
-                _                    -> error "Invalid input supplied." 
+                [suitCode, rankCode] -> readCards' (cs ++ [convertCard suitCode rankCode]) -- If user enters valid input, convert input to card and add to list
+                _                    -> error "part2: invalid input supplied."  -- If user input does not match anything throw an error.
 
 
 -- | Takes Move name, Suit and Rank code returns Move.
@@ -211,11 +211,32 @@ convertMove 'r' suitCode rankCode   = Discard (convertCard suitCode rankCode)
 convertMove 'R' suitCode rankCode   = Discard (convertCard suitCode rankCode) 
 
 
+-- | This function read moves from the user and return the move list.
+readMoves :: IO [Move]
+readMoves = readMoves' [] -- Call helper method recursively to store read moves.
+    where
+        readMoves' :: [Move]       -- Input1: Read moves from the beginning
+                   -> IO [Move]    -- Output: Move list
+        readMoves' ms = do
+            userInput <- getLine   -- Get input from user
+            case userInput of
+                "." -> return ms  -- If user enters a single dot return the read moves 
+                -- If user enters single letter convert it to Move (Draw) by using pattern matching
+                [moveName] -> readMoves' (ms ++ [convertMove moveName '_' '_'])
+                -- If user enters three letters convert it to Move (Discard card) by using pattern matching
+                [moveName, suitCode, rankCode] -> readMoves' (ms ++ [convertMove moveName suitCode rankCode])
+                _                    -> error "part2: invalid input supplied." -- If user input does not match anything throw an error.
 
 
-{-
-a = Card{suit= Clubs, rank = Num 5}
-b = Card{suit= Spades, rank = Num 5}
-c = Card{suit= Clubs, rank = Ace}
-d = Card{suit= Diamonds, rank = Ace}
--}
+main = do 
+    putStrLn "Enter cards:"
+    cards <- readCards
+    -- putStrLn (show cards)
+    putStrLn "Enter moves:"
+    moves <- readMoves
+    -- putStrLn (show moves)
+    putStrLn "Enter goal:"
+    line <- getLine
+    let goal = read line :: Int
+    let score = runGame cards moves goal
+    putStrLn ("Score: " ++ show score)
