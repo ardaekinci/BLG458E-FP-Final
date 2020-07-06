@@ -2,7 +2,7 @@
 data Color = Red | Black deriving(Show) -- Derive Show to display card color
 data Suit = Clubs | Diamonds | Hearts | Spades deriving(Eq) -- Derive Eq to check card color
 data Rank = Num Int | Jack | Queen | King | Ace deriving(Eq) -- Derive Eq to check rank of card
-data Card = Card { suit :: Suit, rank :: Rank }
+data Card = Card { suit :: Suit, rank :: Rank } deriving(Eq) -- Derive Eq to compare two cards
 data Move = Draw | Discard Card
 
 -- | It returns the color of given card.
@@ -25,3 +25,19 @@ cardValue card
     | otherwise              = val   -- Otherwise return the card value.
     where
         Num val = rank card  -- If card is number extract the value of card from data type. 
+
+
+-- | This function removes the given card from the card list.
+removeCard  :: [Card]   -- Input1: Card list to update
+            -> Card     -- Input2: Card that wanted to remove from list
+            -> [Card]   -- Output: Updated card list.
+removeCard (card:cs) c  -- Split the given list by first element and rest of them.
+    -- If card is not exist in the list throw error.
+    | not isCardExist   = error "Given card is not exist in the card list"
+    -- If remove card is the first element of list return rest of the list.
+    | card == c         = cs
+    -- Call recursively remove card function. Check rest of the list to remove the card. Concatenate the card and the recursive calls.
+    | otherwise         = card : removeCard cs c
+    where 
+        -- Check existence of card in the list.
+        isCardExist = elem c cs
