@@ -70,7 +70,8 @@ dictWordsByCharCounts dcs = dictWordsByCharCounts' (toList dcs) empty -- Start r
                 nextListDcs  = drop 1 listDcs       -- Drop first item of list
                 -- Since insertion operation is doing with list ([key]), it concatenates the words as list.
                 nextAcc      = insertWith (++) value [key] acc  -- Use Insert function of Data.Map to insert word and count.
-                                                                
+
+
 {-
     This method implemented as an Alternative solution for wordAnagrams method.
     If original method is not accepted, this method can be use instead of `wordAnagrams`
@@ -82,13 +83,12 @@ dictWordsByCharCounts dcs = dictWordsByCharCounts' (toList dcs) empty -- Start r
     output> fromList [(fromList [('a',1),('b',1),('c',1)],["cba","abc"]),(fromList [('d',1),('e',1),('f',1)],["def"])]
     ghci>   wordAnagrams "bac" k
     output> ["cba","abc"]
-    ghci>   wordAnagramsByList  "bac" k
+    ghci>   wordAnagramsByList "bac" k
     output> ["cba","abc"]
     ghci>   wordAnagramsByList "xxx" k
     output> []
     ghci>   wordAnagrams "xxx" k
     output> []
-
 -}
 -- | This function takes a word and a map that consist of counts of dictionary and related words. Returns matched words by counts.
 wordAnagramsByList :: String                          -- Input1: Word
@@ -116,3 +116,34 @@ wordAnagrams :: String                          -- Input1: Word
 wordAnagrams word mapOfWords = findWithDefault [] charCountsOfWord mapOfWords
     where
         charCountsOfWord = wordCharCounts word -- Get character count of given word as map
+
+
+-- | This function takes character count as input, and generates all subsets of map.
+charCountsSubsets :: (Map Char Int)     -- Input1: Character count
+                  -> [(Map Char Int)]   -- Output: Subsets of given character counts
+charCountsSubsets mapOfCharCount = map fromList (charCountsSubsets' charCountInList)
+    where
+        charCountInList   = toList mapOfCharCount
+        charCountsSubsets' :: [(Char, Int)]     -- Input1: Char count as list
+                           -> [[(Char, Int)]]   -- Output: Subsets of char count list
+        charCountsSubsets' [] = [[]] -- If list is empty return empty subset
+        {-
+            Seperate list by first element and remaining elements.
+            Left Part, Call recursively remaining elements to generate subsets from empty.
+            Second Part, Call recursively remaining elements, after reaching the empty state
+            add first element from left site to list then construct the remaining branches.
+            References: https://stackoverflow.com/questions/19772427/haskell-generate-subsets
+        -}
+        charCountsSubsets' (x:xs) = charCountsSubsets' xs ++ map (x:) (charCountsSubsets' xs)
+
+
+-- | This function takes 2 char count map, and calculate the differences.
+-- | Assuming that second param always subset of first param.
+substractCounts :: (Map Char Int)   -- Input1: First Char Count as Map
+                -> (Map Char Int)   -- Input2: Second Char Count as Map
+                -> (Map Char Int)   -- Output: Differences between first and second maps.
+-- 1) Concatenate two maps as list. ---> ((toList first) ++ (toList second))
+-- 2) Convert merged list to a map by substracting values of same keys. ---> fromListWith (-)
+-- 3) Filter the remaining elements, get the element if count is not zero ---> filter(\x -> snd x /= 0)
+-- 4) Convert filtered list to char count map --> fromList
+substractCounts first second = fromList (filter(\x -> snd x /= 0) (toList (fromListWith (-) ((toList first) ++ (toList second)))))
