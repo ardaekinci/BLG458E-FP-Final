@@ -7,6 +7,9 @@
 import Data.Map (Map, fromList, toList, fromListWith, insertWith, empty, findWithDefault)
 -- Used for toLower, char operations on string.
 import Data.Char (toLower) 
+-- Commandline arguments
+import System.Environment (getArgs) 
+
 
 {-
     This function is combination of map and filter functions.
@@ -101,7 +104,7 @@ wordAnagramsByList word mapOfWords
     -- Throw error for more than one element.
     | otherwise = error "Internal error, Given word matches with more than one count."
     where
-        mapOfWordsInList = map (\y -> (toList (fst y), snd y)) (toList h)   -- Convert maps and inner maps to list.
+        mapOfWordsInList = map (\y -> (toList (fst y), snd y)) (toList mapOfWords)   -- Convert maps and inner maps to list.
         countsOfWordInList = toList (wordCharCounts word)                   -- Convert char counts of word to list.
         -- Filter the all words by checking first value of tuples, if the value matches with count of input word add to list. 
         foundedWordsList = filter (\x -> fst x == countsOfWordInList) mapOfWordsInList
@@ -147,3 +150,39 @@ substractCounts :: (Map Char Int)   -- Input1: First Char Count as Map
 -- 3) Filter the remaining elements, get the element if count is not zero ---> filter(\x -> snd x /= 0)
 -- 4) Convert filtered list to char count map --> fromList
 substractCounts first second = fromList (filter(\x -> snd x /= 0) (toList (fromListWith (-) ((toList first) ++ (toList second)))))
+
+
+-- | This function takes sentence and mapped words by char count, returns the anagram list of given sentence.
+sentenceAnagrams :: String                      -- Input1: Sentence
+                 -> Map (Map Char Int) [String] -- Input2: Mapped words by char count
+                 -> [String]                    -- Output: Anagrams of sentence
+sentenceAnagrams sentence mapOfWords
+    | 
+    where
+        -- Calculate char count of sentence, strip white space.
+        charCountOfSentence = sentenceCharCounts (words sentence)
+        
+
+
+-- Get sentence from command line arguments
+getSentenceFromArgs :: [String]    -- Input1: CLI Args
+                    -> String      -- Output: Word
+-- If there is only one args in the CLI args take it, otherwise throw error.
+getSentenceFromArgs [sentence] = sentence
+getSentenceFromArgs _          = error "Invalid args supplied."
+
+main = do 
+    -- Get command line arguments
+    args <- getArgs
+    -- Get sentence
+    let sentence = getSentenceFromArgs args
+    -- Read from file
+    content <- readFile "words.txt"
+    -- Get dictionary words as String list
+    let dictWords = lines content
+    -- Calculate char count for every word in the dictionary
+    let charCountsOfDictWords = dictCharCounts dictWords
+    -- Merge similar words according to their char counts
+    -- find all the words from the dictionary which have the same character list
+    let mappedDictWordsByCount = dictWordsByCharCounts charCountsOfDictWords
+    
