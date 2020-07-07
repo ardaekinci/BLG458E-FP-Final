@@ -1,5 +1,7 @@
-import Data.Map (Map, fromList, toList, fromListWith, unionWith)      -- Used to store character counts.
-import Data.Char (toLower) -- Used for toLower, char operations on string.
+-- Used to store character counts and map operations.
+import Data.Map (Map, fromList, toList, fromListWith, insertWith, empty)      
+-- Used for toLower, char operations on string.
+import Data.Char (toLower) 
 
 {-
     This function is combination of map and filter functions.
@@ -20,8 +22,8 @@ import Data.Char (toLower) -- Used for toLower, char operations on string.
 -}
 -- | This function takes a word (String) and return its character counts.
 -- | Counts every occurrences of letters in the string and return it as Map.
-wordCharCounts :: String
-               -> Map Char Int
+wordCharCounts :: String        -- Input1: Word
+               -> Map Char Int  -- Output: Character count
 wordCharCounts word = fromList (map (\y -> (y, length (filter (\x -> x == y ) lowerCaseWord))) lowerCaseWord)
     where 
         lowerCaseWord = map toLower word
@@ -35,8 +37,33 @@ wordCharCounts word = fromList (map (\y -> (y, length (filter (\x -> x == y ) lo
     4) fromListWith (+)   --> Create a Map from list by using (+) operator, this operators adds value if the keys are same
 -}
 -- | This function takes word list and return its character counts.
-sentenceCharCounts :: [String]
-                   -> Map Char Int
+sentenceCharCounts :: [String]      -- Input1: Word of sentence
+                   -> Map Char Int  -- Output: Char count of sentence
 sentenceCharCounts =  fromListWith (+) . concat . (map toList) . (map wordCharCounts)
 
 
+-- | This function takes dictionary words and calculates character count for every word. Return map of words to character count.
+dictCharCounts :: [String]                      -- Input1: Words from dictionary
+               -> Map [Char] (Map Char Int)     -- Output: Words to Count map for all words in the dictionary
+dictCharCounts = fromList . map (\y -> (y, wordCharCounts y))   -- For every word in input it calculates the count and map to word.
+
+
+
+-- | This function takes dictionary words and their counts as map.
+-- | Checks every counts and concatenates similar counts by using their word as map.
+dictWordsByCharCounts :: Map [Char] (Map Char Int)      -- Input1: Dictionary words and their counts as map
+                      -> Map (Map Char Int) [String]    -- Output: Concatenated counts and related dictionary words as map
+dictWordsByCharCounts dcs = dictWordsByCharCounts' (toList dcs) empty -- Start recursive calls with empty map and dictionary words.
+    where
+        dictWordsByCharCounts' :: [([Char], Map Char Int)]      -- Input1: Dictionary words and their counts as list
+                               -> Map (Map Char Int) [[Char]]   -- Input2: Accumulator value (Result) for recursive calls
+                               -> Map (Map Char Int) [[Char]]   -- Output: Concatenated counts and related dictionary words as map
+        dictWordsByCharCounts' listDcs acc
+            | null listDcs  = acc           -- If list is empty, return the result
+            | otherwise     = dictWordsByCharCounts' nextListDcs nextAcc    -- Recursive call, with updated list and acc.
+            where
+                (key, value) = head listDcs         -- Get key and value pair of current element
+                nextListDcs  = drop 1 listDcs       -- Drop first item of list
+                -- Since insertion operation is doing with list ([key]), it concatenates the words as list.
+                nextAcc      = insertWith (++) value [key] acc  -- Use Insert function of Data.Map to insert word and count.
+                                                                
