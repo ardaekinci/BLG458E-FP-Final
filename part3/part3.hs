@@ -1,5 +1,10 @@
+{-
+    References for Data.Map:
+    https://hackage.haskell.org/package/containers-0.4.0.0/docs/Data-Map.html#g:9
+    I read this documentation to implement Data.Map and functionalities.
+-}
 -- Used to store character counts and map operations.
-import Data.Map (Map, fromList, toList, fromListWith, insertWith, empty)      
+import Data.Map (Map, fromList, toList, fromListWith, insertWith, empty, findWithDefault)
 -- Used for toLower, char operations on string.
 import Data.Char (toLower) 
 
@@ -48,7 +53,6 @@ dictCharCounts :: [String]                      -- Input1: Words from dictionary
 dictCharCounts = fromList . map (\y -> (y, wordCharCounts y))   -- For every word in input it calculates the count and map to word.
 
 
-
 -- | This function takes dictionary words and their counts as map.
 -- | Checks every counts and concatenates similar counts by using their word as map.
 dictWordsByCharCounts :: Map [Char] (Map Char Int)      -- Input1: Dictionary words and their counts as map
@@ -67,3 +71,48 @@ dictWordsByCharCounts dcs = dictWordsByCharCounts' (toList dcs) empty -- Start r
                 -- Since insertion operation is doing with list ([key]), it concatenates the words as list.
                 nextAcc      = insertWith (++) value [key] acc  -- Use Insert function of Data.Map to insert word and count.
                                                                 
+{-
+    This method implemented as an Alternative solution for wordAnagrams method.
+    If original method is not accepted, this method can be use instead of `wordAnagrams`
+    Inputs and Outputs are same, this function uses only list operations. 
+    On the other hand original function uses the function from Data.Map
+    
+    Example usage of wordAnagrams and wordAnagramsByList functions
+    ghci>   k
+    output> fromList [(fromList [('a',1),('b',1),('c',1)],["cba","abc"]),(fromList [('d',1),('e',1),('f',1)],["def"])]
+    ghci>   wordAnagrams "bac" k
+    output> ["cba","abc"]
+    ghci>   wordAnagramsByList  "bac" k
+    output> ["cba","abc"]
+    ghci>   wordAnagramsByList "xxx" k
+    output> []
+    ghci>   wordAnagrams "xxx" k
+    output> []
+
+-}
+-- | This function takes a word and a map that consist of counts of dictionary and related words. Returns matched words by counts.
+wordAnagramsByList :: String                          -- Input1: Word
+                   -> Map (Map Char Int) [[Char]]     -- Input2: Map of Dictionary Words
+                   -> [[Char]]                        -- Output: Matched words
+wordAnagramsByList word mapOfWords
+    | null foundedWordsList = []    -- If there are no anagram word found for given word, return empty list.
+    -- If only one anagram word found, take the first element and get anagram words by snd (count, words)
+    | length foundedWordsList == 1 = snd (head foundedWordsList)
+    -- Throw error for more than one element.
+    | otherwise = error "Internal error, Given word matches with more than one count."
+    where
+        mapOfWordsInList = map (\y -> (toList (fst y), snd y)) (toList h)   -- Convert maps and inner maps to list.
+        countsOfWordInList = toList (wordCharCounts word)                   -- Convert char counts of word to list.
+        -- Filter the all words by checking first value of tuples, if the value matches with count of input word add to list. 
+        foundedWordsList = filter (\x -> fst x == countsOfWordInList) mapOfWordsInList
+
+
+-- | Alternative Function to wordAnagramsByList. Implemented using the function `findWithDefault` from Data.Map
+wordAnagrams :: String                          -- Input1: Word
+             -> Map (Map Char Int) [[Char]]     -- Input2: Map of Dictionary Words
+             -> [[Char]]                        -- Output: Matched words
+-- findWithDefault (default value) (key) (map)
+-- if given key is not found on map it returns default value ([]), otherwise returns founded value               
+wordAnagrams word mapOfWords = findWithDefault [] charCountsOfWord mapOfWords
+    where
+        charCountsOfWord = wordCharCounts word -- Get character count of given word as map
