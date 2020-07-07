@@ -61,8 +61,7 @@ removeCard (card:cs) c                               -- Split the given list by 
 -- | This function returns true if colors of cards in the list are same otherwise returns false.
 allSameColor :: [Card]  -- Input1: Card List
              -> Bool    -- Output: True if colors are same otherwise False
-allSameColor []     = error "part2: card list is empty" -- Throw error if card list empty.
-allSameColor [_]    = True                              -- Return true if there is only one card in the list.
+allSameColor []     = error "card list is empty" -- Throw error if card list empty.
 allSameColor cards  = null filteredCards                -- If filteredCards is empty return true, otherwise false.
     where
         firstColor = cardColor (cards!!0)   -- Get color of first card in the list.
@@ -75,7 +74,7 @@ sumCards :: [Card]  -- Input1: Card list
          -> Int     -- Output: Total values of cards for given list
 sumCards []     = 0                 -- Return 0 if card list is empty.
 sumCards [x]    = cardValue x       -- Return the value of card if there is only one card in the list.
-sumCards cards = sumCards' cards 0  -- Call Recursive function with initial value as 0.
+sumCards cards  = sumCards' cards 0 -- Call Recursive function with initial value as 0.
     where 
         sumCards' :: [Card] -- Input1: Card list to calculate sum of values
                   -> Int    -- Input2: Acc value (Result)
@@ -163,7 +162,7 @@ convertSuit c
     | c == 'c' || c == 'C' = Clubs
     | c == 'h' || c == 'H' = Hearts
     | c == 's' || c == 'S' = Spades
-    | otherwise            = error "part2: given suit is unknown"
+    | otherwise            = error "suit is unknown"
 
 
 -- | Converts given char to related Rank. Checks first letter for face cards, for "Ace" checks `1`, for `10` checks `t` or `T`.
@@ -176,7 +175,7 @@ convertRank r
     | r == 'k' || r == 'K' = King
     | r == 't' || r == 'T' = Num 10
     | isDigit r            = Num (digitToInt r) -- If given code is digit convert it to int and return related Rank.
-    | otherwise            = error "part2: given rank is unknown"
+    | otherwise            = error "rank is unknown"
 
 
 -- | Takes Suit and Rank code, returns card.
@@ -198,7 +197,7 @@ readCards = readCards' [] -- Call helper method recursively to store read cards.
                 "." -> return cs  -- If user enters a single dot return the read cards 
                 -- Used pattern matching if given string consist of 2 chars this pattern will work.
                 [suitCode, rankCode] -> readCards' (cs ++ [convertCard suitCode rankCode]) -- If user enters valid input, convert input to card and add to list
-                _                    -> error "part2: invalid input supplied."  -- If user input does not match anything throw an error.
+                _                    -> error "invalid input supplied."  -- If user input does not match anything throw an error.
 
 
 -- | Takes Move name, Suit and Rank code returns Move.
@@ -228,7 +227,7 @@ readMoves = readMoves' [] -- Call helper method recursively to store read moves.
                 [moveName] -> readMoves' (ms ++ [convertMove moveName '_' '_'])
                 -- If user enters three letters convert it to Move (Discard card) by using pattern matching
                 [moveName, suitCode, rankCode] -> readMoves' (ms ++ [convertMove moveName suitCode rankCode])
-                _                    -> error "part2: invalid input supplied." -- If user input does not match anything throw an error.
+                _                    -> error "invalid input supplied." -- If user input does not match anything throw an error.
 
 
 main = do 
