@@ -1,8 +1,8 @@
-{-
+{-----------------------------------------------------------------------------------------
     References for Data.Map:
     https://hackage.haskell.org/package/containers-0.4.0.0/docs/Data-Map.html#g:9
     I read this documentation to implement Data.Map and functionalities.
--}
+-----------------------------------------------------------------------------------------}
 -- Used to store character counts and map operations.
 import Data.Map (Map, fromList, toList, fromListWith, insertWith, empty, findWithDefault)
 -- Used for toLower, char operations on string.
@@ -13,7 +13,7 @@ import System.Environment (getArgs)
 import Data.List (nub)
 
 
-{-
+{-------------------------------------------------------------------------------------------------------------
     This function is combination of map and filter functions.
     First the function gets the lower case of given string by using map.
     In this scenario, map takes a function and a list then it applies function to all elements in the list.
@@ -29,7 +29,7 @@ import Data.List (nub)
     For every letter in the word, it counts the number of occurences by using length function.
     fromList converts to list to Map data type.
     [('f', 1), ('a', 2)] ---> Map Char Int
--}
+--------------------------------------------------------------------------------------------------------------}
 -- | This function takes a word (String) and return its character counts.
 -- | Counts every occurrences of letters in the string and return it as Map.
 wordCharCounts :: String        -- Input1: Word
@@ -39,13 +39,13 @@ wordCharCounts word = fromList (map (\y -> (y, length (filter (\x -> x == y ) lo
         lowerCaseWord = map toLower word
 
 
-{-
+{----------------------------------------------------------------------------------------------------------------------------------
     Function composition used for this function.
     1) map wordCharCounts --> Char count calculated for each word.
     2) map toList         --> List of Map converted to List of List to use list operations on.
     3) concat             --> Create one list from list of list. = [[('f',1), ('a', 2)], [('f', 2)]] -->[('f',1), ('a', 2), ('f', 2)]
     4) fromListWith (+)   --> Create a Map from list by using (+) operator, this operators adds value if the keys are same
--}
+----------------------------------------------------------------------------------------------------------------------------------}
 -- | This function takes word list and return its character counts.
 sentenceCharCounts :: [String]      -- Input1: Word of sentence
                    -> Map Char Int  -- Output: Char count of sentence
@@ -77,7 +77,7 @@ dictWordsByCharCounts dcs = dictWordsByCharCounts' (toList dcs) empty -- Start r
                 nextAcc      = insertWith (++) value [key] acc  -- Use Insert function of Data.Map to insert word and count.
 
 
-{-
+{----------------------------------------------------------------------------------------------------------------------------------
     This method implemented as an Alternative solution for wordAnagrams method.
     If original method is not accepted, this method can be use instead of `wordAnagrams`
     Inputs and Outputs are same, this function uses only list operations. 
@@ -94,7 +94,7 @@ dictWordsByCharCounts dcs = dictWordsByCharCounts' (toList dcs) empty -- Start r
     output> []
     ghci>   wordAnagrams "xxx" k
     output> []
--}
+----------------------------------------------------------------------------------------------------------------------------------}
 -- | This function takes a word and a map that consist of counts of dictionary and related words. Returns matched words by counts.
 wordAnagramsByList :: String                          -- Input1: Word
                    -> Map (Map Char Int) [[Char]]     -- Input2: Map of Dictionary Words
@@ -131,24 +131,24 @@ charCountsSubsets mapOfCharCount = nub (map (fromListWith (+)) (charCountsSubset
     where
         -- Convert map to list
         charCountInList     = toList mapOfCharCount
-        {-
+        {---------------------------------------------------------------------------------------
             Seperate the char counts if the value of char is more than one. E.g For word "all".
             [[('a',1),('l',2)]] --> [('a',1),('l',1),('l',1)]
             first map creates same tuple using number of occurences of char.
             second map runs the first function for every char count. Every (key, value) pair.
             concat converts list in list to list. 
-        -}
+        ---------------------------------------------------------------------------------------}
         seperatedCharCounts = concat (map (\y-> map (\x-> (fst y, 1) ) [1..(snd y)] ) charCountInList)
         charCountsSubsets' :: [(Char, Int)]     -- Input1: Char count as list
                            -> [[(Char, Int)]]   -- Output: Subsets of char count list
         charCountsSubsets' [] = [[]] -- If list is empty return empty subset
-        {-
+        {---------------------------------------------------------------------------------------
             Seperate list by first element and remaining elements.
             Left Part, Call recursively remaining elements to generate subsets from empty.
             Second Part, Call recursively remaining elements, after reaching the empty state
-            add first element from left site to list then construct the remaining branches.
+            add first element from left side to list then construct the remaining branches.
             References: https://stackoverflow.com/questions/19772427/haskell-generate-subsets
-        -}
+        ---------------------------------------------------------------------------------------}
         charCountsSubsets' (x:xs) = charCountsSubsets' xs ++ map (x:) (charCountsSubsets' xs)
 
 
@@ -168,7 +168,21 @@ substractCounts first second = fromList (filter(\x -> snd x /= 0) (toList (fromL
 sentenceAnagrams :: String                      -- Input1: Sentence
                  -> Map (Map Char Int) [String] -- Input2: Mapped words by char count
                  -> [String]                    -- Output: Anagrams of sentence
-sentenceAnagrams sentence mapOfWords = ["eat", "ate"]
+sentenceAnagrams sentence mapOfWords = sentenceAnagrams' charCounts (charCountsSubsets charCounts)
+    where
+        charCounts = (sentenceCharCounts sentence)
+        sentenceAnagrams' :: Map Char Int
+                          -> [Map Char Int]
+                          -> [String]
+        sentenceAnagrams' count subset
+            | null count    = [""]
+            | null subset   = []
+            | not (null anagramWords) = concat (map (\y-> map(\x -> y ++ " " ++ x) b) a)
+            where
+                selectedSubset = head subset
+                anagramWords = findWithDefault [] selectedSubset mapOfWords
+                nextCount    = if (null anagramWords) then xx else (substractCounts count)
+
                 
 
 
