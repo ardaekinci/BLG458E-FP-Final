@@ -9,6 +9,8 @@ import Data.Map (Map, fromList, toList, fromListWith, insertWith, empty, findWit
 import Data.Char (toLower) 
 -- Commandline arguments
 import System.Environment (getArgs) 
+-- Remove same element from subset
+import Data.List (nub)
 
 
 {-
@@ -124,9 +126,19 @@ wordAnagrams word mapOfWords = findWithDefault [] charCountsOfWord mapOfWords
 -- | This function takes character count as input, and generates all subsets of map.
 charCountsSubsets :: (Map Char Int)     -- Input1: Character count
                   -> [(Map Char Int)]   -- Output: Subsets of given character counts
-charCountsSubsets mapOfCharCount = map fromList (charCountsSubsets' charCountInList)
+-- Create subsets of counts, remove same elements from list.
+charCountsSubsets mapOfCharCount = nub (map (fromListWith (+)) (charCountsSubsets' seperatedCharCounts))
     where
-        charCountInList   = toList mapOfCharCount
+        -- Convert map to list
+        charCountInList     = toList mapOfCharCount
+        {-
+            Seperate the char counts if the value of char is more than one. E.g For word "all".
+            [[('a',1),('l',2)]] --> [('a',1),('l',1),('l',1)]
+            first map creates same tuple using number of occurences of char.
+            second map runs the first function for every char count. Every (key, value) pair.
+            concat converts list in list to list. 
+        -}
+        seperatedCharCounts = concat (map (\y-> map (\x-> (fst y, 1) ) [1..(snd y)] ) charCountInList)
         charCountsSubsets' :: [(Char, Int)]     -- Input1: Char count as list
                            -> [[(Char, Int)]]   -- Output: Subsets of char count list
         charCountsSubsets' [] = [[]] -- If list is empty return empty subset
