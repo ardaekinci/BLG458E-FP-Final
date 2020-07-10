@@ -168,12 +168,8 @@ substractCounts first second = fromList (filter(\x -> snd x /= 0) (toList (fromL
 sentenceAnagrams :: String                      -- Input1: Sentence
                  -> Map (Map Char Int) [String] -- Input2: Mapped words by char count
                  -> [String]                    -- Output: Anagrams of sentence
-sentenceAnagrams sentence mapOfWords
-    | 
-    where
-        -- Calculate char count of sentence, strip white space.
-        charCountOfSentence = sentenceCharCounts (words sentence)
-        
+sentenceAnagrams sentence mapOfWords = ["eat", "ate"]
+                
 
 
 -- Get sentence from command line arguments
@@ -197,4 +193,6 @@ main = do
     -- Merge similar words according to their char counts
     -- find all the words from the dictionary which have the same character list
     let mappedDictWordsByCount = dictWordsByCharCounts charCountsOfDictWords
+    let anagramSentences = sentenceAnagrams sentence mappedDictWordsByCount
+    putStrLn (unlines anagramSentences)
     
