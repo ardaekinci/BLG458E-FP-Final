@@ -55,7 +55,7 @@ sentenceCharCounts =  fromListWith (+) . concat . (map toList) . (map wordCharCo
 -- | This function takes dictionary words and calculates character count for every word. Return map of words to character count.
 dictCharCounts :: [String]                      -- Input1: Words from dictionary
                -> Map [Char] (Map Char Int)     -- Output: Words to Count map for all words in the dictionary
-dictCharCounts = fromList . map (\y -> (y, wordCharCounts y))   -- For every word in input it calculates the count and map to word.
+dictCharCounts = fromList . map (\y -> (map toLower y, wordCharCounts y))   -- For every word in input it calculates the count and map to word.
 
 
 -- | This function takes dictionary words and their counts as map.
