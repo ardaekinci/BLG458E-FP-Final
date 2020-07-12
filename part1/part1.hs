@@ -155,7 +155,7 @@ Check what is leap year for leap function.
 ghci> sum (map (\y-> if (leap y) then 1 else 0) [1..400])
 output> 97
 
-To calculate total number of days in 400 years. We need to ad 366 days for leap year, 365 days for non-leap year.
+To calculate total number of days in 400 years. We need to add 366 days for leap year, 365 days for non-leap year.
 ghci> (400 - 97) * 365 + 97 * 366
 output> 146097
 ghci> sum (map (\y-> sum (map (\x -> daysInMonth x y) [1..12])) [1..400]) -- Correctness of our calculation.
@@ -167,8 +167,9 @@ output>0
 
 What is the possibility that a certain day of a month (such as 1 Jan, or your
 birthday) is a Sunday (or some other day)? Are all days equally possible?
+
 Since the number of days in 400 years a multiple of 7. All the number of days(Sunday, Monday .. Friday) is equally
-distributed. Any 400 years starts with x day, and ends with (x - 1) day. All days equally possible.
+distributed. Any 400 year interval starts with x day, and ends with (x - 1) day. All days equally possible.
 
 Correctness
 * Get each day in 400 years. E.g. [3,4,5,6,0,1,2,3 .. ]
