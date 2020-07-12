@@ -211,11 +211,22 @@ getSentenceFromArgs :: [String]    -- Input1: CLI Args
 getSentenceFromArgs [sentence] = sentence
 getSentenceFromArgs _          = error "Invalid args supplied."
 
+
+-- | Take user input sentence and remove special characters and punctuation"
+stripSentence :: String -- Input1: User input (Raw Sentence)
+              -> String -- Output: Filtered string that contains only lowercase and uppercase characters
+-- If char is in the valid char list, take it.
+stripSentence rawSentence = filter (\x -> elem x validChars) rawSentence
+    where
+        -- Lower case + Upper Case + Whitespace
+        validChars = ['a'..'z'] ++ ['A'..'Z'] ++ " "
+
+
 main = do 
     -- Get command line arguments
     args <- getArgs
-    -- Get sentence
-    let sentence = getSentenceFromArgs args
+    -- Get sentence and filter
+    let sentence = stripSentence (getSentenceFromArgs args)
     -- Read from file
     content <- readFile "words.txt"
     -- Get dictionary words as String list
