@@ -4,9 +4,9 @@ import Data.Char (isDigit, digitToInt) -- Used for Rank Conversion
 
 -- Define data types
 data Color = Red | Black deriving(Show, Eq) -- Derive Show to display card color
-data Suit = Clubs | Diamonds | Hearts | Spades deriving(Eq, Show) -- Derive Eq to check card color
-data Rank = Num Int | Jack | Queen | King | Ace deriving(Eq, Show) -- Derive Eq to check rank of card
-data Card = Card { suit :: Suit, rank :: Rank } deriving(Eq, Show) -- Derive Eq to compare two cards
+data Suit = Clubs | Diamonds | Hearts | Spades deriving(Eq) -- Derive Eq to check card color
+data Rank = Num Int | Jack | Queen | King | Ace deriving(Eq) -- Derive Eq to check rank of card
+data Card = Card { suit :: Suit, rank :: Rank } deriving(Eq) -- Derive Eq to compare two cards
 data Move = Draw | Discard Card deriving(Eq) -- Derive Eq to check next move of user
 
 
@@ -24,8 +24,10 @@ cardColor :: Card   -- Input1: Card
           -> Color  -- Output: Color of given Card
 cardColor card 
     -- If Black Types includes the type of given card return black, otherwise red. 
-    | elem (suit card) [Clubs, Spades] = Black
+    | elem (suit card) blackSuits = Black
     | otherwise = Red
+    where
+        blackSuits = [Clubs, Spades]
 
 
 -- | This function returns the value of given card.
@@ -157,25 +159,27 @@ runGame cardList moveList goal = runGame' GameState{cards = cardList, heldCards 
 -- | Converts given char to related Suit. Checks first letter of Suit.
 convertSuit :: Char -- Input1: Code of suit
             -> Suit -- Output: Related suit 
+-- Check existence of given suit code in the available suit codes.
 convertSuit c 
-    | c == 'd' || c == 'D' = Diamonds
-    | c == 'c' || c == 'C' = Clubs
-    | c == 'h' || c == 'H' = Hearts
-    | c == 's' || c == 'S' = Spades
-    | otherwise            = error "suit is unknown"
+    | elem c "dD" = Diamonds
+    | elem c "cC" = Clubs
+    | elem c "hH" = Hearts
+    | elem c "sS" = Spades
+    | otherwise   = error "suit is unknown"
 
 
 -- | Converts given char to related Rank. Checks first letter for face cards, for "Ace" checks `1`, for `10` checks `t` or `T`.
 convertRank :: Char -- Input1: Code of Rank
             -> Rank -- Output: Related Rank
+-- Check existence of given rank code in the available rank codes.
 convertRank r
-    | r == '1'             = Ace
-    | r == 'j' || r == 'J' = Jack
-    | r == 'q' || r == 'Q' = Queen
-    | r == 'k' || r == 'K' = King
-    | r == 't' || r == 'T' = Num 10
-    | isDigit r            = Num (digitToInt r) -- If given code is digit convert it to int and return related Rank.
-    | otherwise            = error "rank is unknown"
+    | r == '1'    = Ace
+    | elem r "jJ" = Jack
+    | elem r "qQ" = Queen
+    | elem r "kK" = King
+    | elem r "tT" = Num 10
+    | isDigit r   = Num (digitToInt r) -- If given code is digit convert it to int and return related Rank.
+    | otherwise   = error "rank is unknown"
 
 
 -- | Takes Suit and Rank code, returns card.

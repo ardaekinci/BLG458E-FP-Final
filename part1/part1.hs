@@ -117,16 +117,15 @@ sundays2 start end = sundays2' start 1 (dayOfWeek start 1 1) -- Initialize first
                 nextM = if m == 12 then 1 else m + 1 -- If current month is the last month set month as 1 to start for new year.
                 days = daysInMonth m y               -- Days in the current month
                 nextDow = dow + (days `mod` 7)       -- Calculate next day of week
-                rest = sundays2' nextY nextM nextDow -- Call recursively to calculate result for next date.
+                rest = sundays2' nextY nextM nextDow -- Call function recursively to calculate result for next date.
 
 
 -- | Get function by name and pass the params
 getFunction :: String -> (Integer -> Integer -> Integer)
-getFunction name
-    | name == "sundays1" = sundays1
-    | name == "sundays1tr" = sundays1tr
-    | name == "sundays2" = sundays2
-    | otherwise = error "unknown function"
+getFunction "sundays1"   = sundays1
+getFunction "sundays1tr" = sundays1tr
+getFunction "sundays2"   = sundays2
+getFunction _            = error "unknown function"
 
 -- | Calculate and display the result by function name
 main :: IO ()
