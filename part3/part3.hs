@@ -123,6 +123,15 @@ wordAnagrams word mapOfWords = findWithDefault [] charCountsOfWord mapOfWords
         charCountsOfWord = wordCharCounts word -- Get character count of given word as map
 
 
+-- | Instead of converting count to word for wordAnagrams function, this method takes count as params and return anagrams.
+wordAnagramsByCount :: Map Char Int                    -- Input1: Char Count of word
+                    -> Map (Map Char Int) [[Char]]     -- Input2: Map of Dictionary Words
+                    -> [[Char]]                        -- Output: Matched words
+-- findWithDefault (default value) (key) (map)
+-- if given key is not found on map it returns default value ([]), otherwise returns founded value               
+wordAnagramsByCount count mapOfWords = findWithDefault [] count mapOfWords
+
+
 -- | This function takes character count as input, and generates all subsets of map.
 charCountsSubsets :: (Map Char Int)     -- Input1: Character count
                   -> [(Map Char Int)]   -- Output: Subsets of given character counts
@@ -185,8 +194,8 @@ sentenceAnagrams sentence mapOfWords = sentenceAnagrams' charCounts (charCountsS
             | otherwise     = currentWord   -- If there anagram is not found, just call current count with new selected subset.
             where
                 selectedSubset  = head subset   -- Take first element from subset to search anagram word.
-                -- Find anagram words that mathces with selected count
-                anagramWords    = findWithDefault [] selectedSubset mapOfWords  
+                -- Find anagram words that matches with selected count
+                anagramWords    = wordAnagramsByCount selectedSubset mapOfWords
                 -- Calculate next word count for recursive call, substract selected subset from count.
                 nextWordCount   = substractCounts count selectedSubset
                 -- Calculate recursive call for current word, do not change current count, get the rest elements from subset with tail.
@@ -234,8 +243,9 @@ main = do
     -- Calculate char count for every word in the dictionary
     let charCountsOfDictWords = dictCharCounts dictWords
     -- Merge similar words according to their char counts
-    -- find all the words from the dictionary which have the same character list
+    -- Find all the words from the dictionary which have the same character list
     let mappedDictWordsByCount = dictWordsByCharCounts charCountsOfDictWords
     let anagramSentences = sentenceAnagrams sentence mappedDictWordsByCount
+    -- Convert String array to string, unlines function combines the elements with '/n'
     putStrLn (unlines anagramSentences)
     
