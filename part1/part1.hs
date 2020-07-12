@@ -31,6 +31,7 @@ dayOfWeek year month day = (day + t1 + k + t2 + t3 + 5 * j) `mod` 7
     Also, This function checks the first day of every month.
 
     2) What if you don't define a "rest" and use its expression where it's needed?
+    It does not change anything, just duplicated code.
 -}
 
 -- | This function calculates the number of months that starts with sunday between two years.
@@ -133,3 +134,55 @@ main = do
     line <- getLine
     let [f, start, end] = words line
     putStrLn $ show $ (getFunction f) (read start :: Integer) (read end :: Integer)
+
+
+{-------------------------------------------------------------------------------------------------------------------
+
+Q8) (math question) Is the number of weeks in 400 years an integer value? In other words, is the number of days
+in 400 years a multiple of 7? If so, what is the possibility that a certain day of a month (such as 1 Jan, or your
+birthday) is a Sunday (or some other day)? Are all days equally possible?
+
+Answer)
+If the year is leap year it has 366 days, otherwise 365 days.
+ghci> sum (map (\x -> daysInMonth x 2000) [1..12])
+output> 366
+ghci> sum (map (\x -> daysInMonth x 2001) [1..12])
+output> 365
+
+So to calculate total number of days in 400 years, first we need calculate that how many leap years in 400 years.
+We can add 1 for leap years, 0 for non leap years to list to calculate number of leap years in 400 years.
+Check what is leap year for leap function.
+ghci> sum (map (\y-> if (leap y) then 1 else 0) [1..400])
+output> 97
+
+To calculate total number of days in 400 years. We need to ad 366 days for leap year, 365 days for non-leap year.
+ghci> (400 - 97) * 365 + 97 * 366
+output> 146097
+ghci> sum (map (\y-> sum (map (\x -> daysInMonth x y) [1..12])) [1..400]) -- Correctness of our calculation.
+output> 146097
+
+Is the number of days in 400 years a multiple of 7? The answer is `YES`.
+ghci> 146097 `mod` 7
+output>0
+
+What is the possibility that a certain day of a month (such as 1 Jan, or your
+birthday) is a Sunday (or some other day)? Are all days equally possible?
+Since the number of days in 400 years a multiple of 7. All the number of days(Sunday, Monday .. Friday) is equally
+distributed. Any 400 years starts with x day, and ends with (x - 1) day. All days equally possible.
+
+Correctness
+* Get each day in 400 years. E.g. [3,4,5,6,0,1,2,3 .. ]
+ghci> days = concat (map (\y-> concat (map (\m -> map(\d -> dayOfWeek y m d ) [1..(daysInMonth m y)]) [1..12])) [4..403])
+ghci> length days
+* Make sure number of day equals to previous calculation
+output> 146097
+* Define day codes (0 = Saturday, 1 = Sunday, 2 = Monday, ..., 6 = Friday).
+ghci> dayCodes = [0..6]
+* Calculate the length of day codes in the day list.
+ghci> dayCounts = map (\dayCode -> length (filter( == dayCode) days)) dayCodes
+* Print dayCounts
+ghci> dayCounts
+output> [20871,20871,20871,20871,20871,20871,20871]
+
+** Same code part can be run for different 400 year intervals. For each interval it will print the same result.
+--------------------------------------------------------------------------------------------------------------------}
