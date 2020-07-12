@@ -161,29 +161,47 @@ substractCounts :: (Map Char Int)   -- Input1: First Char Count as Map
 -- 2) Convert merged list to a map by substracting values of same keys. ---> fromListWith (-)
 -- 3) Filter the remaining elements, get the element if count is not zero ---> filter(\x -> snd x /= 0)
 -- 4) Convert filtered list to char count map --> fromList
-substractCounts first second = fromList (filter(\x -> snd x /= 0) (toList (fromListWith (-) ((toList first) ++ (toList second)))))
+substractCounts first second = fromList (filter(\x -> snd x /= 0) (toList (fromListWith (-) ((toList second) ++ (toList first)))))
 
 
 -- | This function takes sentence and mapped words by char count, returns the anagram list of given sentence.
 sentenceAnagrams :: String                      -- Input1: Sentence
                  -> Map (Map Char Int) [String] -- Input2: Mapped words by char count
                  -> [String]                    -- Output: Anagrams of sentence
+-- Initialize helper function with char count and subset.
 sentenceAnagrams sentence mapOfWords = sentenceAnagrams' charCounts (charCountsSubsets charCounts)
     where
-        charCounts = (sentenceCharCounts sentence)
-        sentenceAnagrams' :: Map Char Int
-                          -> [Map Char Int]
-                          -> [String]
+        -- Get char count of first sentence, words function creates list from the sentence by seperating with white space
+        charCounts = sentenceCharCounts (words sentence)
+        sentenceAnagrams' :: Map Char Int       -- Input1: Char count
+                          -> [Map Char Int]     -- Input2: Subset of char count
+                          -> [String]           -- Output: Anagram sentences
         sentenceAnagrams' count subset
-            | null count    = [""]
-            | null subset   = []
-            | not (null anagramWords) = concat (map (\y-> map(\x -> y ++ " " ++ x) b) a)
+            | null count    = [""]      -- If the char count is empty, return empty string to concatenate with other words.
+            | null subset   = []        -- If current subset is empty, return an empty list to ignore failed searches.
+            -- If anagram founds for word, call function recursively. left branch is remaining subsets of currenct count
+            -- Right branch is substracted count and anagram words.
+            | not (null anagramWords)   = currentWord ++ concatResult   
+            | otherwise     = currentWord   -- If there anagram is not found, just call current count with new selected subset.
             where
-                selectedSubset = head subset
-                anagramWords = findWithDefault [] selectedSubset mapOfWords
-                nextCount    = if (null anagramWords) then xx else (substractCounts count)
-
-                
+                selectedSubset  = head subset   -- Take first element from subset to search anagram word.
+                -- Find anagram words that mathces with selected count
+                anagramWords    = findWithDefault [] selectedSubset mapOfWords  
+                -- Calculate next word count for recursive call, substract selected subset from count.
+                nextWordCount   = substractCounts count selectedSubset
+                -- Calculate recursive call for current word, do not change current count, get the rest elements from subset with tail.
+                currentWord     = sentenceAnagrams' count (tail subset)
+                -- Calculet recursive call for next word, make call with nextWord count and calculated subsets for new word.
+                nextWord        = sentenceAnagrams' nextWordCount (charCountsSubsets nextWordCount)
+                {----------------------------------------------------------------------------------------
+                    This part calculates the next call for foundend anagrams. This function concats the
+                    string for each call. It takes two list and combine these two list by taking every
+                    possible combination.
+                    ghci> nextWord = ["abc", "def"]
+                    ghci> anagramWords = ["efg", "hfg"]
+                    output> ["efg abc","efg def","hfg abc","hfg def"]
+                -----------------------------------------------------------------------------------------}
+                concatResult    = concat (map (\y-> map(\x -> y ++ " " ++ x) nextWord) anagramWords)
 
 
 -- Get sentence from command line arguments
