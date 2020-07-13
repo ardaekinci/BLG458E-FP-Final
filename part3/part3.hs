@@ -256,7 +256,7 @@ main = do
         else
             -- Convert String array to string, unlines function combines the elements with '/n'
             -- Generate test cases to put output to yaml for calico.
-            -- putStrLn (unlines (sort (map (\x-> "- expect: \"" ++ x ++ "\"") anagramSentences)))
+            -- putStrLn (unlines (sort (map (\x-> "- expect: \"" ++ x ++ "\" # timeout: 60") anagramSentences)))
             putStrLn (unlines (sort anagramSentences))
             
     

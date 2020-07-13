@@ -372,7 +372,7 @@
       - send: "."
       - expect: "Enter goal:"
       - send: "70"
-      - expect: "Score: 38"
+      - expect: "Score: 41"
       - expect: _EOF_
 - case_150150133_3:
     run: ./part2
@@ -509,7 +509,7 @@
       - send: "."
       - expect: "Enter goal:"
       - send: "70"
-      - expect: "Score: 30"
+      - expect: "Score: 35"
       - expect: _EOF_
 - case_150150133_8:
     run: ./part2
@@ -566,7 +566,7 @@
       - send: "."
       - expect: "Enter goal:"
       - send: "70"
-      - expect: "Score: 51"
+      - expect: "Score: 30"
       - expect: _EOF_
 - case_150170710_0:
     run: ./part2
