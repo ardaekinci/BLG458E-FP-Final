@@ -63,8 +63,8 @@ removeCard (card:cs) c                               -- Split the given list by 
 -- | This function returns true if colors of cards in the list are same otherwise returns false.
 allSameColor :: [Card]  -- Input1: Card List
              -> Bool    -- Output: True if colors are same otherwise False
-allSameColor []     = error "card list is empty" -- Throw error if card list empty.
-allSameColor cards  = null filteredCards                -- If filteredCards is empty return true, otherwise false.
+allSameColor []     = True                             -- Return true if there is no card in the held card.
+allSameColor cards  = null filteredCards               -- If filteredCards is empty return true, otherwise false.
     where
         firstColor = cardColor (cards!!0)   -- Get color of first card in the list.
         -- Get cards that has different color from the first card in the list. It must be empty for same color.
@@ -140,18 +140,18 @@ runGame cardList moveList goal = runGame' GameState{cards = cardList, heldCards 
                  -> Int       -- Output: Score
         runGame' currentState
             | null (moves currentState) = currentScore currentState -- If there are no moves finish the game
-            -- If user discard a card make recursive call with updated cards
-            | nextMove /= Draw = nextState
+            | nextMove /= Draw = nextState  -- If user discard a card make recursive call with updated cards
             | null (cards currentState) = currentScore currentState -- If there are no cards for draw finish the game
-            | nextScore > goal = nextScore -- If score after the drawing exceed the goal finish the game
+            | nextSumOfCards > goal = nextScore -- If score after the drawing exceed the goal finish the game
             | otherwise = nextState
             where
                 -- Calculate next move and remaining moves
                 (nextMove, remainingMoves) = getNextMove (moves currentState)
                 -- Calculate next cards in the card list and held cards according to move
                 (nextCards, nextHeldCards) = calculateNextCards (cards currentState, heldCards currentState) nextMove
-                -- Calculate next score for held cards
-                nextScore = score nextHeldCards goal
+                -- Calculate next sum of held cards and score
+                nextSumOfCards = sumCards nextHeldCards
+                nextScore      = score nextHeldCards goal
                 -- Calculate next state of the game
                 nextState = runGame' GameState{cards = nextCards, heldCards = nextHeldCards, currentScore = nextScore, moves = remainingMoves}
 
@@ -173,13 +173,16 @@ convertRank :: Char -- Input1: Code of Rank
             -> Rank -- Output: Related Rank
 -- Check existence of given rank code in the available rank codes.
 convertRank r
-    | r == '1'    = Ace
-    | elem r "jJ" = Jack
-    | elem r "qQ" = Queen
-    | elem r "kK" = King
-    | elem r "tT" = Num 10
-    | isDigit r   = Num (digitToInt r) -- If given code is digit convert it to int and return related Rank.
-    | otherwise   = error "rank is unknown"
+    | r == '1'              = Ace
+    | elem r "jJ"           = Jack
+    | elem r "qQ"           = Queen
+    | elem r "kK"           = King
+    | elem r "tT"           = Num 10
+    | isDigit r && isValid  = Num val -- If given code is digit convert it to int and return related Rank.
+    | otherwise             = error "rank is unknown"
+    where
+        val = digitToInt r          -- Convert char to int
+        isValid = elem val [1..9]   -- Check given val is valid or not. 
 
 
 -- | Takes Suit and Rank code, returns card.

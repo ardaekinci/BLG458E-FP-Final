@@ -4,205 +4,6 @@
 - compile:
     run: ghc part2.hs -o part2
     blocker: true
-- case_1:
-    run: ./part2
-    script:
-      - expect: "Enter cards:"
-      - send: "d1"
-      - send: "dt"
-      - send: "."
-      - expect: "Enter moves:"
-      - send: "d"
-      - send: "."
-      - expect: "Enter goal:"
-      - send: "25"
-      - expect: "Score: 7"
-      - expect: _EOF_
-- case_2:
-    run: ./part2
-    script:
-      - expect: "Enter cards:"
-      - send: "d2"
-      - send: "c2"
-      - send: "c7"
-      - send: "c5"
-      - send: "h3"
-      - send: "s4"
-      - send: "s9"
-      - send: "s8"
-      - send: "c2"
-      - send: "."
-      - expect: "Enter moves:"
-      - send: "rc1"
-      - send: "."
-      - expect: "Enter goal:"
-      - send: "39"
-      - expect: "part2: card not in list"
-      - expect: _EOF_
-    exit: 1
-- case_3:
-    run: ./part2
-    script:
-      - expect: "Enter cards:"
-      - send: "s8"
-      - send: "h4"
-      - send: "c5"
-      - send: "st"
-      - send: "c5"
-      - send: "sq"
-      - send: "h5"
-      - send: "d5"
-      - send: "hq"
-      - send: "."
-      - expect: "Enter moves:"
-      - send: "d"
-      - send: "d"
-      - send: "rs8"
-      - send: "d"
-      - send: "d"
-      - send: "d"
-      - send: "d"
-      - send: "d"
-      - send: "."
-      - expect: "Enter goal:"
-      - send: "28"
-      - expect: "Score: 33"
-      - expect: _EOF_
-- case_4:
-    run: ./part2
-    script:
-      - expect: "Enter cards:"
-      - send: "h2"
-      - send: "dj"
-      - send: "h4"
-      - send: "d9"
-      - send: "s9"
-      - send: "d2"
-      - send: "dk"
-      - send: "cj"
-      - send: "c9"
-      - send: "."
-      - expect: "Enter moves:"
-      - send: "d"
-      - send: "d"
-      - send: "d"
-      - send: "d"
-      - send: "."
-      - expect: "Enter goal:"
-      - send: "11"
-      - expect: "Score: 21"
-      - expect: _EOF_
-- case_5:
-    run: ./part2
-    script:
-      - expect: "Enter cards:"
-      - send: "h2"
-      - send: "s6"
-      - send: "s6"
-      - send: "d3"
-      - send: "st"
-      - send: "d1"
-      - send: "."
-      - expect: "Enter moves:"
-      - send: "d"
-      - send: "."
-      - expect: "Enter goal:"
-      - send: "11"
-      - expect: "Score: 4"
-      - expect: _EOF_
-- case_6:
-    run: ./part2
-    script:
-      - expect: "Enter cards:"
-      - send: "d7"
-      - send: "d7"
-      - send: "h5"
-      - send: "h4"
-      - send: "s6"
-      - send: "d6"
-      - send: "."
-      - expect: "Enter moves:"
-      - send: "d"
-      - send: "d"
-      - send: "d"
-      - send: "rh5"
-      - send: "."
-      - expect: "Enter goal:"
-      - send: "36"
-      - expect: "Score: 11"
-      - expect: _EOF_
-- case_7:
-    run: ./part2
-    script:
-      - expect: "Enter cards:"
-      - send: "h3"
-      - send: "d3"
-      - send: "."
-      - expect: "Enter moves:"
-      - send: "d"
-      - send: "."
-      - expect: "Enter goal:"
-      - send: "11"
-      - expect: "Score: 4"
-      - expect: _EOF_
-- case_8:
-    run: ./part2
-    script:
-      - expect: "Enter cards:"
-      - send: "hk"
-      - send: "c2"
-      - send: "c4"
-      - send: "s6"
-      - send: "c7"
-      - send: "hq"
-      - send: "dt"
-      - send: "st"
-      - send: "c1"
-      - send: "."
-      - expect: "Enter moves:"
-      - send: "d"
-      - send: "d"
-      - send: "rhk"
-      - send: "rc2"
-      - send: "rc1"
-      - send: "."
-      - expect: "Enter goal:"
-      - send: "42"
-      - expect: "part2: card not in list"
-      - expect: _EOF_
-    exit: 1
-- case_9:
-    run: ./part2
-    script:
-      - expect: "Enter cards:"
-      - send: "sq"
-      - send: "d4"
-      - send: "."
-      - expect: "Enter moves:"
-      - send: "d"
-      - send: "."
-      - expect: "Enter goal:"
-      - send: "48"
-      - expect: "Score: 19"
-      - expect: _EOF_
-- case_10:
-    run: ./part2
-    script:
-      - expect: "Enter cards:"
-      - send: "dj"
-      - send: "s1"
-      - send: "c2"
-      - send: "s1"
-      - send: "."
-      - expect: "Enter moves:"
-      - send: "d"
-      - send: "d"
-      - send: "d"
-      - send: "."
-      - expect: "Enter goal:"
-      - send: "47"
-      - expect: "Score: 24"
-      - expect: _EOF_
 - case_150150023_1:
     run: ./part2
     script:
@@ -312,6 +113,572 @@
       - send: "21"
       - expect: "Score: 0"
       - expect: _EOF_
+- case_150150151_1:
+    run: ./part2
+    script:
+      - expect: "Enter cards:"
+      - send: "d1"
+      - send: "dt"
+      - send: "."
+      - expect: "Enter moves:"
+      - send: "d"
+      - send: "."
+      - expect: "Enter goal:"
+      - send: "25"
+      - expect: "Score: 7"
+      - expect: _EOF_
+- case_150150151_2:
+    run: ./part2
+    script:
+      - expect: "Enter cards:"
+      - send: "d2"
+      - send: "c2"
+      - send: "c7"
+      - send: "c5"
+      - send: "h3"
+      - send: "s4"
+      - send: "s9"
+      - send: "s8"
+      - send: "c2"
+      - send: "."
+      - expect: "Enter moves:"
+      - send: "rc1"
+      - send: "."
+      - expect: "Enter goal:"
+      - send: "39"
+      - expect: "part2: card not in list"
+      - expect: _EOF_
+    exit: 1
+- case_150150151_3:
+    run: ./part2
+    script:
+      - expect: "Enter cards:"
+      - send: "s8"
+      - send: "h4"
+      - send: "c5"
+      - send: "st"
+      - send: "c5"
+      - send: "sq"
+      - send: "h5"
+      - send: "d5"
+      - send: "hq"
+      - send: "."
+      - expect: "Enter moves:"
+      - send: "d"
+      - send: "d"
+      - send: "rs8"
+      - send: "d"
+      - send: "d"
+      - send: "d"
+      - send: "d"
+      - send: "d"
+      - send: "."
+      - expect: "Enter goal:"
+      - send: "28"
+      - expect: "Score: 18"
+      - expect: _EOF_
+- case_150150151_4:
+    run: ./part2
+    script:
+      - expect: "Enter cards:"
+      - send: "h2"
+      - send: "dj"
+      - send: "h4"
+      - send: "d9"
+      - send: "s9"
+      - send: "d2"
+      - send: "dk"
+      - send: "cj"
+      - send: "c9"
+      - send: "."
+      - expect: "Enter moves:"
+      - send: "d"
+      - send: "d"
+      - send: "d"
+      - send: "d"
+      - send: "."
+      - expect: "Enter goal:"
+      - send: "11"
+      - expect: "Score: 1"
+      - expect: _EOF_
+- case_150150151_5:
+    run: ./part2
+    script:
+      - expect: "Enter cards:"
+      - send: "h2"
+      - send: "s6"
+      - send: "s6"
+      - send: "d3"
+      - send: "st"
+      - send: "d1"
+      - send: "."
+      - expect: "Enter moves:"
+      - send: "d"
+      - send: "."
+      - expect: "Enter goal:"
+      - send: "11"
+      - expect: "Score: 4"
+      - expect: _EOF_
+- case_150150151_6:
+    run: ./part2
+    script:
+      - expect: "Enter cards:"
+      - send: "d7"
+      - send: "d7"
+      - send: "h5"
+      - send: "h4"
+      - send: "s6"
+      - send: "d6"
+      - send: "."
+      - expect: "Enter moves:"
+      - send: "d"
+      - send: "d"
+      - send: "d"
+      - send: "rh5"
+      - send: "."
+      - expect: "Enter goal:"
+      - send: "36"
+      - expect: "Score: 11"
+      - expect: _EOF_
+- case_150150151_7:
+    run: ./part2
+    script:
+      - expect: "Enter cards:"
+      - send: "h3"
+      - send: "d3"
+      - send: "."
+      - expect: "Enter moves:"
+      - send: "d"
+      - send: "."
+      - expect: "Enter goal:"
+      - send: "11"
+      - expect: "Score: 4"
+      - expect: _EOF_
+- case_150150151_8:
+    run: ./part2
+    script:
+      - expect: "Enter cards:"
+      - send: "hk"
+      - send: "c2"
+      - send: "c4"
+      - send: "s6"
+      - send: "c7"
+      - send: "hq"
+      - send: "dt"
+      - send: "st"
+      - send: "c1"
+      - send: "."
+      - expect: "Enter moves:"
+      - send: "d"
+      - send: "d"
+      - send: "rhk"
+      - send: "rc2"
+      - send: "rc1"
+      - send: "."
+      - expect: "Enter goal:"
+      - send: "42"
+      - expect: "part2: card not in list"
+      - expect: _EOF_
+    exit: 1
+- case_150150151_9:
+    run: ./part2
+    script:
+      - expect: "Enter cards:"
+      - send: "sq"
+      - send: "d4"
+      - send: "."
+      - expect: "Enter moves:"
+      - send: "d"
+      - send: "."
+      - expect: "Enter goal:"
+      - send: "48"
+      - expect: "Score: 19"
+      - expect: _EOF_
+- case_150150151_10:
+    run: ./part2
+    script:
+      - expect: "Enter cards:"
+      - send: "dj"
+      - send: "s1"
+      - send: "c2"
+      - send: "s1"
+      - send: "."
+      - expect: "Enter moves:"
+      - send: "d"
+      - send: "d"
+      - send: "d"
+      - send: "."
+      - expect: "Enter goal:"
+      - send: "47"
+      - expect: "Score: 24"
+      - expect: _EOF_
+- case_150150133_0:
+    run: ./part2
+    script:
+      - expect: "Enter cards:"
+      - send: "h1"
+      - send: "s3"
+      - send: "sK"
+      - send: "."
+      - expect: "Enter moves:"
+      - send: "rs3"
+      - send: "d"
+      - send: "d"
+      - send: "."
+      - expect: "Enter goal:"
+      - send: "40"
+      - expect: "part2: card not in list"
+      - expect: _EOF_
+    exit: 1
+- case_150150133_1:
+    run: ./part2
+    script:
+      - expect: "Enter cards:"
+      - send: "h1"
+      - send: "s3"
+      - send: "sK"
+      - send: "."
+      - expect: "Enter moves:"
+      - send: "d"
+      - send: "d"
+      - send: "rs3"
+      - send: "d"
+      - send: "."
+      - expect: "Enter goal:"
+      - send: "20"
+      - expect: "Score: 3"
+      - expect: _EOF_
+- case_150150133_2:
+    run: ./part2
+    script:
+      - expect: "Enter cards:"
+      - send: "h1"
+      - send: "cJ"
+      - send: "D7"
+      - send: "s3"
+      - send: "sK"
+      - send: "d9"
+      - send: "."
+      - expect: "Enter moves:"
+      - send: "d"
+      - send: "d"
+      - send: "rh1"
+      - send: "d"
+      - send: "d"
+      - send: "rd7"
+      - send: "d"
+      - send: "d"
+      - send: "rs3"
+      - send: "."
+      - expect: "Enter goal:"
+      - send: "70"
+      - expect: "Score: 38"
+      - expect: _EOF_
+- case_150150133_3:
+    run: ./part2
+    script:
+      - expect: "Enter cards:"
+      - send: "h1"
+      - send: "cJ"
+      - send: "D7"
+      - send: "s3"
+      - send: "sK"
+      - send: "d9"
+      - send: "."
+      - expect: "Enter moves:"
+      - send: "d"
+      - send: "d"
+      - send: "rh1"
+      - send: "d"
+      - send: "d"
+      - send: "rd7"
+      - send: "d"
+      - send: "rs3"
+      - send: "."
+      - expect: "Enter goal:"
+      - send: "70"
+      - expect: "Score: 25"
+      - expect: _EOF_
+- case_150150133_4:
+    run: ./part2
+    script:
+      - expect: "Enter cards:"
+      - send: "h1"
+      - send: "cJ"
+      - send: "D7"
+      - send: "s3"
+      - send: "sK"
+      - send: "d9"
+      - send: "."
+      - expect: "Enter moves:"
+      - send: "d"
+      - send: "d"
+      - send: "rh1"
+      - send: "d"
+      - send: "d"
+      - send: "rd7"
+      - send: "d"
+      - send: "rs3"
+      - send: "rCj"
+      - send: "."
+      - expect: "Enter goal:"
+      - send: "70"
+      - expect: "Score: 30"
+      - expect: _EOF_
+- case_150150133_5:
+    run: ./part2
+    script:
+      - expect: "Enter cards:"
+      - send: "h1"
+      - send: "cJ"
+      - send: "D7"
+      - send: "s3"
+      - send: "sK"
+      - send: "d9"
+      - send: "."
+      - expect: "Enter moves:"
+      - send: "d"
+      - send: "d"
+      - send: "rh1"
+      - send: "d"
+      - send: "d"
+      - send: "rd7"
+      - send: "d"
+      - send: "rs3"
+      - send: "rCj"
+      - send: "rSk"
+      - send: "d"
+      - send: "."
+      - expect: "Enter goal:"
+      - send: "70"
+      - expect: "Score: 30"
+      - expect: _EOF_
+- case_150150133_6:
+    run: ./part2
+    script:
+      - expect: "Enter cards:"
+      - send: "h1"
+      - send: "cJ"
+      - send: "D7"
+      - send: "s3"
+      - send: "sK"
+      - send: "d9"
+      - send: "."
+      - expect: "Enter moves:"
+      - send: "d"
+      - send: "d"
+      - send: "rh1"
+      - send: "d"
+      - send: "d"
+      - send: "rd7"
+      - send: "d"
+      - send: "rs3"
+      - send: "rCj"
+      - send: "rSk"
+      - send: "rD9"
+      - send: "."
+      - expect: "Enter goal:"
+      - send: "70"
+      - expect: "part2: card not in list"
+      - expect: _EOF_
+    exit: 1
+- case_150150133_7:
+    run: ./part2
+    script:
+      - expect: "Enter cards:"
+      - send: "h1"
+      - send: "cJ"
+      - send: "D7"
+      - send: "s3"
+      - send: "sK"
+      - send: "d9"
+      - send: "."
+      - expect: "Enter moves:"
+      - send: "d"
+      - send: "d"
+      - send: "rh1"
+      - send: "d"
+      - send: "d"
+      - send: "rd7"
+      - send: "d"
+      - send: "rs3"
+      - send: "rCj"
+      - send: "rSk"
+      - send: "d"
+      - send: "rD9"
+      - send: "."
+      - expect: "Enter goal:"
+      - send: "70"
+      - expect: "Score: 30"
+      - expect: _EOF_
+- case_150150133_8:
+    run: ./part2
+    script:
+      - expect: "Enter cards:"
+      - send: "h1"
+      - send: "cJ"
+      - send: "D7"
+      - send: "s3"
+      - send: "sK"
+      - send: "d9"
+      - send: "."
+      - expect: "Enter moves:"
+      - send: "d"
+      - send: "d"
+      - send: "rh1"
+      - send: "d"
+      - send: "d"
+      - send: "rd7"
+      - send: "d"
+      - send: "rs3"
+      - send: "rCj"
+      - send: "rSk"
+      - send: "d"
+      - send: "rD9"
+      - send: "."
+      - expect: "Enter goal:"
+      - send: "20"
+      - expect: "Score: 3"
+      - expect: _EOF_
+- case_150150133_9:
+    run: ./part2
+    script:
+      - expect: "Enter cards:"
+      - send: "h1"
+      - send: "cJ"
+      - send: "D7"
+      - send: "s3"
+      - send: "sK"
+      - send: "d9"
+      - send: "."
+      - expect: "Enter moves:"
+      - send: "d"
+      - send: "d"
+      - send: "rh1"
+      - send: "d"
+      - send: "d"
+      - send: "rd7"
+      - send: "d"
+      - send: "rs3"
+      - send: "rCj"
+      - send: "d"
+      - send: "rSk"
+      - send: "."
+      - expect: "Enter goal:"
+      - send: "70"
+      - expect: "Score: 51"
+      - expect: _EOF_
+- case_150170710_0:
+    run: ./part2
+    script:
+      - expect: "Enter cards:"
+      - send: "h3"
+      - send: "c2"
+      - send: "h7"
+      - send: "DA"
+      - send: "."
+      - expect: "Enter moves:"
+      - send: "d"
+      - send: "d"
+      - send: "d"
+      - send: "rh3"
+      - send: "."
+      - expect: "Enter goal:"
+      - send: "67"
+      - expect: "Score: 58"
+      - expect: _EOF_
+- case_150170710_1:
+    run: ./part2
+    script:
+      - expect: "Enter cards:"
+      - send: "s7"
+      - send: "c1"
+      - send: "dK"
+      - send: "h5"
+      - send: "h8"
+      - send: "s3"
+      - send: "."
+      - expect: "Enter moves:"
+      - send: "d"
+      - send: "d"
+      - send: "rC1"
+      - send: "d"
+      - send: "d"
+      - send: "rs3"
+      - send: "d"
+      - send: "d"
+      - send: "."
+      - expect: "Enter goal:"
+      - send: "35"
+      - expect: "part2: card not in list"
+      - expect: _EOF_
+    exit: 1
+- case_150170710_2:
+    run: ./part2
+    script:
+      - expect: "Enter cards:"
+      - send: "h0"
+      - send: "d8"
+      - send: "c3"
+      - send: "H1"
+      - send: "d1"
+      - send: "."
+      - expect: "Enter moves:"
+      - send: "d"
+      - send: "d"
+      - send: "d"
+      - send: "d"
+      - send: "d"
+      - send: "."
+      - expect: "Enter goal:"
+      - send: "41"
+      - expect: "part2: rank is unknown"
+      - expect: _EOF_
+    exit: 1
+- case_150170710_3:
+    run: ./part2
+    script:
+      - expect: "Enter cards:"
+      - send: "hk"
+      - send: "cj"
+      - send: "h1"
+      - send: "a3"
+      - send: "."
+      - expect: "Enter moves:"
+      - send: "d"
+      - send: "d"
+      - send: "d"
+      - send: "d"
+      - send: "."
+      - expect: "Enter goal:"
+      - send: "35"
+      - expect: "part2: suit is unknown"
+      - expect: _EOF_
+    exit: 1
+- case_150170710_4:
+    run: ./part2
+    script:
+      - expect: "Enter cards:"
+      - send: "ck"
+      - send: "d7"
+      - send: "s1"
+      - send: "s7"
+      - send: "d6"
+      - send: "."
+      - expect: "Enter moves:"
+      - send: "d"
+      - send: "rs1"
+      - send: "d"
+      - send: "d"
+      - send: "rs7"
+      - send: "d"
+      - send: "d"
+      - send: "."
+      - expect: "Enter goal:"
+      - send: "35"
+      - expect: "part2: card not in list"
+      - expect: _EOF_
+    exit: 1   
 - cleanup:
     run: rm -f part2 part2.o part2.hi
     visible: false
