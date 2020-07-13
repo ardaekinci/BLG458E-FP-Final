@@ -12,7 +12,8 @@ import Data.Char (toLower)
 -- Commandline arguments
 import System.Environment (getArgs) 
 -- Remove same element from subset
-import Data.List (nub)
+-- Sort is used to sort result to test by calico
+import Data.List (nub, sort)
 
 
 {-------------------------------------------------------------------------------------------------------------
@@ -57,7 +58,7 @@ sentenceCharCounts =  fromListWith (+) . concat . (map toList) . (map wordCharCo
 -- | This function takes dictionary words and calculates character count for every word. Return map of words to character count.
 dictCharCounts :: [String]                      -- Input1: Words from dictionary
                -> Map [Char] (Map Char Int)     -- Output: Words to Count map for all words in the dictionary
-dictCharCounts = fromList . map (\y -> (map toLower y, wordCharCounts y))   -- For every word in input it calculates the count and map to word.
+dictCharCounts = fromList . map (\y -> (y, wordCharCounts y))   -- For every word in input it calculates the count and map to word.
 
 
 -- | This function takes dictionary words and their counts as map.
@@ -248,6 +249,14 @@ main = do
     -- Find all the words from the dictionary which have the same character list
     let mappedDictWordsByCount = dictWordsByCharCounts charCountsOfDictWords
     let anagramSentences = sentenceAnagrams sentence mappedDictWordsByCount
-    -- Convert String array to string, unlines function combines the elements with '/n'
-    putStrLn (unlines anagramSentences)
+    -- If there is no anagram print message
+    if (null anagramSentences || anagramSentences == [""])
+        then
+            putStrLn "There is no anagram in the dictionary"
+        else
+            -- Convert String array to string, unlines function combines the elements with '/n'
+            -- Generate test cases to put output to yaml for calico.
+            -- putStrLn (unlines (sort (map (\x-> "- expect: \"" ++ x ++ "\"") anagramSentences)))
+            putStrLn (unlines (sort anagramSentences))
+            
     
